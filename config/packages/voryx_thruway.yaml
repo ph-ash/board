@@ -1,0 +1,8 @@
+voryx_thruway:
+  realm: 'realm1'
+  url: 'ws://0.0.0.0:8080' #The url that the clients will use to connect to the router
+  trusted_url: 'ws://127.0.0.1:8081'
+  router:
+    ip: '127.0.0.1'  # the ip that the router should start on
+    port: '8080'  # public facing port.  If authentication is enabled, this port will be protected
+    trusted_port: '8081' # Bypasses all authentication.  Use this for trusted clients.
