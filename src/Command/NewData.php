@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use DateTimeImmutable;
 use Exception;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -23,7 +24,8 @@ class NewData extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('test:newdata')
-            ->addArgument('additionalData', InputArgument::OPTIONAL);
+            ->addArgument('status', InputArgument::OPTIONAL)
+            ->addArgument('monitoringSuffix', InputArgument::OPTIONAL, '', 1);
     }
 
     /**
@@ -42,12 +44,18 @@ class NewData extends ContainerAwareCommand
             ]
         );
 
-        $payload = ['Hello world from PHP', $input->getArgument('additionalData')];
+        $payload = [
+            'id' => 'example monitoring ' . $input->getArgument('monitoringSuffix'),
+            'status' => $input->getArgument('status'),
+            'payload' => 'payload',
+            'idleTimeout' => '10s',
+            'date' => (new DateTimeImmutable())->format(DateTimeImmutable::ATOM)
+        ];
 
         $connection->on(
             'open',
             function (ClientSession $session) use ($connection, $payload) {
-                $session->publish('phashtopic', $payload);
+                $session->publish('phashtopic', [json_encode($payload)]);
 
                 $connection->close();
             }
