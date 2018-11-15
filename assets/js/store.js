@@ -6,28 +6,28 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         websocketConnected: false,
-        message: "Hello Vue Store"
+        monitorings: {}
     },
     mutations: {
-        ['receiveMessage'](state, message) {
-            state.message = message
-        },
         ['websocketConnected'](state) {
             state.websocketConnected = true
         },
         ['websocketDisconnected'](state) {
             state.websocketConnected = false
+        },
+        ['updateMonitoring'](state, data) {
+            Vue.set(state.monitorings, data.id, data)
         }
     },
     actions: {
-        doReceiveMessage ({commit}, message) {
-            commit('receiveMessage', message)
-        },
         webSocketConnected ({commit}) {
             commit('websocketConnected')
         },
         webSocketDisconnected ({commit}) {
             commit('websocketDisconnected')
+        },
+        updateMonitoring ({commit}, data) {
+            commit('updateMonitoring', data)
         }
     }
 });
