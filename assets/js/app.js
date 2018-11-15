@@ -6,7 +6,17 @@ import App from "../vue/App";
 import store from "../js/store";
 
 new Vue({
-    template: '<App/>',
+    template: '<App :url="url" :realm="realm"/>',
+    data() {
+        return {
+            url: "",
+            realm: ""
+        }
+    },
     components: { App },
-    store
+    store,
+    beforeMount() {
+        this.url = this.$el.dataset.url;
+        this.realm = this.$el.dataset.realm;
+    }
 }).$mount('#app');

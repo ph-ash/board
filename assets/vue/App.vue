@@ -9,14 +9,18 @@
 
     export default {
         name: 'app',
+        props: [
+            'url',
+            'realm'
+        ],
         computed: {
             getMessage () {
                 return this.$store.state.message;
             }
         },
         mounted() {
-            const ws = new WebSocketTransport('ws://localhost:8080', undefined, true);
-            const wamp = new Client(ws, 'realm1');
+            const ws = new WebSocketTransport(this.url, undefined, true);
+            const wamp = new Client(ws, this.realm);
             ws.onOpen.subscribe(() => this.$store.dispatch('webSocketConnected'));
             ws.onClose.subscribe(() => {if (this.$store.state.websocketConnected) {this.$store.dispatch('webSocketDisconnected')}});
             wamp.topic('foo').subscribe((v) => this.$store.dispatch('doReceiveMessage', v.args.join('|')));

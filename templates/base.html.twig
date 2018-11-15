@@ -12,7 +12,7 @@
     </head>
     <body>
         {% block body %}
-        <div id="app">{% verbatim %}{{ message }}{% endverbatim %}</div>
+        <div id="app" data-url="{{ websocket.url }}" data-realm="{{ websocket.realm }}">{% verbatim %}{{ message }}{% endverbatim %}</div>
         {% endblock %}
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
