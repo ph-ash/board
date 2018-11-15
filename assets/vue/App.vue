@@ -23,7 +23,7 @@
             const wamp = new Client(ws, this.realm);
             ws.onOpen.subscribe(() => this.$store.dispatch('webSocketConnected'));
             ws.onClose.subscribe(() => {if (this.$store.state.websocketConnected) {this.$store.dispatch('webSocketDisconnected')}});
-            wamp.topic('foo').subscribe((v) => this.$store.dispatch('doReceiveMessage', v.args.join('|')));
+            wamp.topic('phashtopic').subscribe((v) => this.$store.dispatch('doReceiveMessage', v.args.join(' / ')));
         }
     }
 </script>

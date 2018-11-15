@@ -8,6 +8,7 @@ use Exception;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Thruway\ClientSession;
@@ -21,7 +22,8 @@ class NewData extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('test:newdata');
+        $this->setName('test:newdata')
+            ->addArgument('additionalData', InputArgument::OPTIONAL);
     }
 
     /**
@@ -40,10 +42,12 @@ class NewData extends ContainerAwareCommand
             ]
         );
 
+        $payload = ['Hello world from PHP', $input->getArgument('additionalData')];
+
         $connection->on(
             'open',
-            function (ClientSession $session) use ($connection) {
-                $session->publish('foo', ['Hello, world from PHP!']);
+            function (ClientSession $session) use ($connection, $payload) {
+                $session->publish('phashtopic', $payload);
 
                 $connection->close();
             }

@@ -9,7 +9,7 @@ use Voryx\ThruwayBundle\Annotation\Subscribe;
 class Wamp
 {
     /**
-     * @Subscribe(value="foo", worker="FOO_SUB")
+     * @Subscribe(value="phashtopic", worker="FOO_SUB")
      */
     public function subscribe()
     {
