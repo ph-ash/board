@@ -48,7 +48,7 @@ class NewData extends ContainerAwareCommand
             'id' => 'example monitoring ' . $input->getArgument('monitoringSuffix'),
             'status' => $input->getArgument('status'),
             'payload' => 'payload',
-            'idleTimeout' => '10s',
+            'idleTimeout' => '10',
             'date' => (new DateTimeImmutable())->format(DateTimeImmutable::ATOM)
         ];
 

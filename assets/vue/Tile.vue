@@ -2,7 +2,10 @@
     <div class="tile">
         <p>{{ monitoringData.id }}</p>
         <p>{{ monitoringData.status }}</p>
-        <p>{{ secondsPassedSinceLastUpdate }}</p>
+        <p>{{ monitoringData.date }}</p>
+        <p>{{ now }}</p>
+        <p>{{ idleThreshold }}</p>
+        <p>{{ isIdle }}</p>
     </div>
 </template>
 
@@ -16,19 +19,27 @@
         ],
         data() {
             return {
-                secondsPassedSinceLastUpdate: 0
+                now: ""
+            }
+        },
+        computed: {
+            idleThreshold() {
+                return moment(this.monitoringData.date).add(this.monitoringData.idleTimeout, 's')
+            },
+            isIdle() {
+                return moment(this.now).isAfter(this.idleThreshold)
             }
         },
         created() {
-            this.getSecondsPassedSinceLastUpdate();
-            setInterval(this.getSecondsPassedSinceLastUpdate, 1000)
+            this.updateNow();
+            setInterval(this.updateNow, 1000)
         },
         destroyed() {
-            clearInterval(this.getSecondsPassedSinceLastUpdate)
+            clearInterval(this.updateNow)
         },
         methods: {
-            getSecondsPassedSinceLastUpdate () {
-                this.secondsPassedSinceLastUpdate = ~~(moment().diff(this.monitoringData.date) / 1000)
+            updateNow () {
+                this.now = moment()
             }
         }
     }
