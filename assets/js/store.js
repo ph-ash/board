@@ -9,25 +9,25 @@ export default new Vuex.Store({
         monitorings: {}
     },
     mutations: {
-        ['websocketConnected'](state) {
-            state.websocketConnected = true
+        "websocketConnected"(state) {
+            state.websocketConnected = true;
         },
-        ['websocketDisconnected'](state) {
-            state.websocketConnected = false
+        "websocketDisconnected"(state) {
+            state.websocketConnected = false;
         },
-        ['updateMonitoring'](state, data) {
-            Vue.set(state.monitorings, data.id, data)
+        "updateMonitoring"(state, data) {
+            Vue.set(state.monitorings, data.id, data);
         }
     },
     actions: {
-        webSocketConnected ({commit}) {
-            commit('websocketConnected')
+        webSocketConnected({ commit }) {
+            commit("websocketConnected");
         },
-        webSocketDisconnected ({commit}) {
-            commit('websocketDisconnected')
+        webSocketDisconnected({ commit }) {
+            commit("websocketDisconnected");
         },
-        updateMonitoring ({commit}, data) {
-            commit('updateMonitoring', data)
+        updateMonitoring({ commit }, data) {
+            commit("updateMonitoring", data);
         }
     }
 });

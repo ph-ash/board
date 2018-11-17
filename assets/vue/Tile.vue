@@ -10,37 +10,21 @@
 </template>
 
 <script>
-    import moment from "moment"
+import moment from "moment";
 
-    export default {
-        name: 'tile',
-        props: [
-            'monitoringData'
-        ],
-        data() {
-            return {
-                now: ""
-            }
+export default {
+    name: "Tile",
+    props: [
+        "monitoringData",
+        "now"
+    ],
+    computed: {
+        idleThreshold() {
+            return moment(this.monitoringData.date).add(this.monitoringData.idleTimeout, "s");
         },
-        computed: {
-            idleThreshold() {
-                return moment(this.monitoringData.date).add(this.monitoringData.idleTimeout, 's')
-            },
-            isIdle() {
-                return moment(this.now).isAfter(this.idleThreshold)
-            }
-        },
-        created() {
-            this.updateNow();
-            setInterval(this.updateNow, 1000)
-        },
-        destroyed() {
-            clearInterval(this.updateNow)
-        },
-        methods: {
-            updateNow () {
-                this.now = moment()
-            }
+        isIdle() {
+            return this.now > this.idleThreshold;
         }
     }
+};
 </script>
