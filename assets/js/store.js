@@ -9,13 +9,13 @@ export default new Vuex.Store({
         monitorings: {}
     },
     mutations: {
-        "websocketConnected"(state) {
+        websocketConnected: state => {
             state.websocketConnected = true;
         },
-        "websocketDisconnected"(state) {
+        websocketDisconnected: state => {
             state.websocketConnected = false;
         },
-        "updateMonitoring"(state, data) {
+        updateMonitoring: (state, data) => {
             Vue.set(state.monitorings, data.id, data);
         }
     },
@@ -28,6 +28,23 @@ export default new Vuex.Store({
         },
         updateMonitoring({ commit }, data) {
             commit("updateMonitoring", data);
+        }
+    },
+    getters: {
+        gridSize: state => {
+            const count = Object.keys(state.monitorings).length;
+            if (count <= 1) {
+                return {width: 1, height: 1}
+            }
+
+            let sqrt = Math.sqrt(count),
+                width = Math.ceil(sqrt),
+                height = Math.floor(sqrt);
+
+            if (width * height < count) {
+                height += 1;
+            }
+            return {width, height}
         }
     }
 });

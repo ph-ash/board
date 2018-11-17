@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="board" :style="cssProps">
         <p v-if="!websocketConnected">KEINE VERBINDUNG!</p>
         <tile
             v-for="monitoring in monitorings"
@@ -31,6 +31,13 @@ export default {
         };
     },
     computed: {
+        cssProps() {
+            const grid = this.$store.getters.gridSize;
+            return {
+                "--grid-columns": grid.width,
+                "--grid-rows": grid.height
+            }
+        },
         ...mapState(["monitorings", "websocketConnected"])
     },
     created() {
@@ -66,3 +73,13 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+    .board {
+        height: 100%;
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(var(--grid-columns), 1fr);
+        grid-template-rows: repeat(var(--grid-rows), 1fr);
+    }
+</style>
