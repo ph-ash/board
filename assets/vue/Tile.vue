@@ -34,6 +34,12 @@ export default {
 </script>
 
 <style scoped>
+    :root {
+        /* these will all be overwritten by css styles injected by the parent */
+        --grid-columns: 1;
+        --grid-rows: 1;
+    }
+
     .tile {
         border: 1px solid black;
         margin: 2px;
@@ -41,6 +47,8 @@ export default {
         display: flex;
         flex-direction: column;
         justify-content: center;
+        min-width: calc(100vw / var(--grid-columns) - 4px);
+        min-height: calc(100vh / var(--grid-rows) - 4px);
     }
 
     .tile .monitoring-id {

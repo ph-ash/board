@@ -1,11 +1,12 @@
 <template>
-    <div class="board" :style="cssProps">
+    <div class="board">
         <p v-if="!websocketConnected">KEINE VERBINDUNG!</p>
         <tile
             v-for="monitoring in monitorings"
             :key="monitoring.id"
             :monitoring-data="monitoring"
             :now="now"
+            :style="cssProps"
         />
         <p v-if="Object.keys(monitorings).length === 0">LEER!</p>
     </div>
@@ -78,8 +79,10 @@ export default {
     .board {
         height: 100%;
         width: 100%;
-        display: grid;
-        grid-template-columns: repeat(var(--grid-columns), 1fr);
-        grid-template-rows: repeat(var(--grid-rows), 1fr);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        align-content: stretch;
+        overflow: visible;
     }
 </style>

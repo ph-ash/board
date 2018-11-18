@@ -37,8 +37,8 @@ export default new Vuex.Store({
                 return {width: 1, height: 1}
             }
 
-            let sqrt = Math.sqrt(count),
-                width = Math.ceil(sqrt),
+            let sqrt = Math.sqrt(count / 2),
+                width = Math.ceil(sqrt) * 2,
                 height = Math.floor(sqrt);
 
             if (width * height < count) {

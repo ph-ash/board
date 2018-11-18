@@ -25,7 +25,7 @@ class NewData extends ContainerAwareCommand
     {
         $this->setName('test:newdata')
             ->addArgument('status', InputArgument::OPTIONAL)
-            ->addArgument('monitoringSuffix', InputArgument::OPTIONAL, '', 1);
+            ->addArgument('count', InputArgument::OPTIONAL, '', 25);
     }
 
     /**
@@ -44,18 +44,20 @@ class NewData extends ContainerAwareCommand
             ]
         );
 
-        $payload = [
-            'id' => 'example monitoring ' . $input->getArgument('monitoringSuffix'),
-            'status' => $input->getArgument('status'),
-            'payload' => 'payload',
-            'idleTimeout' => '10',
-            'date' => (new DateTimeImmutable())->format(DateTimeImmutable::ATOM)
-        ];
-
         $connection->on(
             'open',
-            function (ClientSession $session) use ($connection, $payload) {
-                $session->publish('phashtopic', [json_encode($payload)]);
+            function (ClientSession $session) use ($connection, $input) {
+                for ($i = 0; $i < $input->getArgument('count'); $i++) {
+                    $payload = [
+                        'id' => 'example monitoring ' . ($i + 1),
+                        'status' => $input->getArgument('status'),
+                        'payload' => 'payload',
+                        'idleTimeout' => '100',
+                        'date' => (new DateTimeImmutable())->format(DateTimeImmutable::ATOM)
+                    ];
+
+                    $session->publish('phashtopic', [json_encode($payload)]);
+                }
 
                 $connection->close();
             }
