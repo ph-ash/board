@@ -1,6 +1,6 @@
 <template>
     <div class="board">
-        <p v-if="!websocketConnected">KEINE VERBINDUNG!</p>
+        <p v-if="!websocketConnected">KEINE VERBINDUNG! // TODO: fancy</p>
         <tile
             v-for="monitoring in monitorings"
             :key="monitoring.id"
@@ -8,7 +8,7 @@
             :now="now"
             :style="cssProps"
         />
-        <p v-if="Object.keys(monitorings).length === 0">LEER!</p>
+        <p v-if="Object.keys(monitorings).length === 0">LEER! // TODO: fancy</p>
     </div>
 </template>
 
