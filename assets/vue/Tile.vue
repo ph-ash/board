@@ -15,7 +15,7 @@ export default {
     ],
     computed: {
         idleThreshold() {
-            return moment(this.monitoringData.date).add(this.monitoringData.idleTimeout, "s")
+            return moment(this.monitoringData.date).add(this.monitoringData.idleTimeoutInSeconds, "s")
         },
         isIdle() {
             return this.now > this.idleThreshold
