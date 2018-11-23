@@ -5,8 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        websocketConnected: false,
-        monitorings: {}
+        websocketConnected: false
     },
     mutations: {
         websocketConnected: state => {
@@ -14,9 +13,6 @@ export default new Vuex.Store({
         },
         websocketDisconnected: state => {
             state.websocketConnected = false;
-        },
-        updateMonitoring: (state, data) => {
-            Vue.set(state.monitorings, data.id, data);
         }
     },
     actions: {
@@ -25,14 +21,12 @@ export default new Vuex.Store({
         },
         webSocketDisconnected({ commit }) {
             commit("websocketDisconnected");
-        },
-        updateMonitoring({ commit }, data) {
-            commit("updateMonitoring", data);
         }
     },
     getters: {
         gridSize: state => {
-            const count = Object.keys(state.monitorings).length;
+            // const count = Object.keys(state.monitorings).length;
+            const count = 1000;
             if (count <= 1) {
                 return {width: 1, height: 1}
             }

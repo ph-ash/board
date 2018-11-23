@@ -1,6 +1,5 @@
 <template>
     <div :class="currentClass">
-        <p v-if="showMonitoringId" class="monitoring-id">{{ monitoringData.id }}</p>
     </div>
 </template>
 
@@ -15,19 +14,22 @@ export default {
     ],
     computed: {
         idleThreshold() {
-            return moment(this.monitoringData.date).add(this.monitoringData.idleTimeoutInSeconds, "s")
+            return moment(this.monitoringData.date).add(this.monitoringData.idleTimeout, "s")
         },
         isIdle() {
             return this.now > this.idleThreshold
         },
         currentStatus() {
-            return (this.isIdle ? "idle" : this.monitoringData.status)
+            if (this.isIdle) {
+                return "idle"
+            }
+            if (this.monitoringData.status === "ok") {
+                return "ok"
+            }
+            return "error"
         },
         currentClass() {
             return "tile status-" + this.currentStatus
-        },
-        showMonitoringId() {
-            return this.currentStatus !== "ok"
         }
     }
 };

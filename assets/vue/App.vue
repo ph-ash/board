@@ -13,9 +13,13 @@
 </template>
 
 <script>
+import Vue from "vue";
 import { mapState } from "vuex";
 import { Client, WebSocketTransport } from "thruway.js";
 import Tile from "./Tile";
+
+let cached = {};
+let dirty = true;
 
 export default {
     name: "App",
@@ -28,7 +32,8 @@ export default {
     ],
     data() {
         return {
-            now: ""
+            now: "",
+            monitorings: {}
         };
     },
     computed: {
@@ -39,7 +44,7 @@ export default {
                 "--grid-rows": grid.height
             }
         },
-        ...mapState(["monitorings", "websocketConnected"])
+        ...mapState(["websocketConnected"])
     },
     created() {
         this.updateNow();
@@ -65,11 +70,20 @@ export default {
                 this.$store.dispatch("webSocketDisconnected");
             }
         });
-        wamp.topic("phashtopic").subscribe((v) => this.$store.dispatch("updateMonitoring", JSON.parse(v.args[0])));
+        wamp.topic("phashtopic").subscribe((v) => {
+            let data = JSON.parse(v.args[0]);
+            cached[data.id] = data;
+            dirty = true;
+        });
     },
     methods: {
         updateNow() {
-            this.now = Date.now();
+            this.now = new Date().getTime();
+            if (dirty) {
+                Vue.set(this, "monitorings", cached);
+                this.$forceUpdate();
+                dirty = false;
+            }
         }
     }
 };
