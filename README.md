@@ -3,7 +3,7 @@ PHP/Vue Monitoring Dashboard
 
 ## General Architecture
 
-![General Architecture](documentation/architecture-board.png)
+![General Architecture](https://github.com/ph-ash/documentation/blob/master/architecture-board.png)
 
 ## Installation
 
