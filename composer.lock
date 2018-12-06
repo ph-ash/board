@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "09da8b58c44b2a5669b7de2581e7c2b5",
+    "content-hash": "ecf5600eaf5a2c173ac863588d5a765a",
     "packages": [
         {
             "name": "cboden/ratchet",
@@ -747,32 +747,33 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.4.2",
+            "version": "1.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c"
+                "reference": "9f83dded91781a01c63574e387eaa769be769115"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
-                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/9f83dded91781a01c63574e387eaa769be769115",
+                "reference": "9f83dded91781a01c63574e387eaa769be769115",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0",
-                "psr/http-message": "~1.0"
+                "psr/http-message": "~1.0",
+                "ralouphie/getallheaders": "^2.0.5"
             },
             "provide": {
                 "psr/http-message-implementation": "1.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.0"
+                "phpunit/phpunit": "~4.8.36 || ^5.7.27 || ^6.5.8"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.4-dev"
+                    "dev-master": "1.5-dev"
                 }
             },
             "autoload": {
@@ -802,13 +803,14 @@
             "keywords": [
                 "http",
                 "message",
+                "psr-7",
                 "request",
                 "response",
                 "stream",
                 "uri",
                 "url"
             ],
-            "time": "2017-03-20T17:10:46+00:00"
+            "time": "2018-12-04T20:46:45+00:00"
         },
         {
             "name": "psr/cache",
@@ -1049,6 +1051,46 @@
                 "simple-cache"
             ],
             "time": "2017-10-23T01:57:42+00:00"
+        },
+        {
+            "name": "ralouphie/getallheaders",
+            "version": "2.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ralouphie/getallheaders.git",
+                "reference": "5601c8a83fbba7ef674a7369456d12f1e0d0eafa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ralouphie/getallheaders/zipball/5601c8a83fbba7ef674a7369456d12f1e0d0eafa",
+                "reference": "5601c8a83fbba7ef674a7369456d12f1e0d0eafa",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7.0",
+                "satooshi/php-coveralls": ">=1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/getallheaders.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ralph Khattar",
+                    "email": "ralph.khattar@gmail.com"
+                }
+            ],
+            "description": "A polyfill for getallheaders.",
+            "time": "2016-02-11T07:05:27+00:00"
         },
         {
             "name": "ratchet/pawl",
@@ -3371,6 +3413,73 @@
     ],
     "packages-dev": [
         {
+            "name": "brainmaestro/composer-git-hooks",
+            "version": "v2.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/BrainMaestro/composer-git-hooks.git",
+                "reference": "1ae36cc7c1a4387f026e5f085b3ba63fdf912cb7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/BrainMaestro/composer-git-hooks/zipball/1ae36cc7c1a4387f026e5f085b3ba63fdf912cb7",
+                "reference": "1ae36cc7c1a4387f026e5f085b3ba63fdf912cb7",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.6 || >=7.0 <7.3",
+                "symfony/console": "^3.2 || ^4.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.9",
+                "phpunit/phpunit": "^5.7|^7.0"
+            },
+            "bin": [
+                "cghooks"
+            ],
+            "type": "library",
+            "extra": {
+                "hooks": {
+                    "pre-commit": "composer check-style",
+                    "pre-push": [
+                        "composer test",
+                        "appver=$(grep -o -P '\\d.\\d.\\d' cghooks)",
+                        "tag=$(git tag --sort=-v:refname | head -n 1 | tr -d v)",
+                        "if [ \"$tag\" != \"$appver\" ]; then",
+                        "echo \"The most recent tag v$tag does not match the application version $appver\n\"",
+                        "sed -i -E \"s/$appver/$tag/\" cghooks",
+                        "exit 1",
+                        "fi"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "BrainMaestro\\GitHooks\\": "src/"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ezinwa Okpoechi",
+                    "email": "brainmaestro@outlook.com"
+                }
+            ],
+            "description": "Easily manage git hooks in your composer config",
+            "keywords": [
+                "HOOK",
+                "composer",
+                "git"
+            ],
+            "time": "2018-10-28T02:55:04+00:00"
+        },
+        {
             "name": "facebook/webdriver",
             "version": "1.6.0",
             "source": {
@@ -4083,16 +4192,16 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v4.1.8",
+            "version": "v4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "473fb4544afff836f4d9877c4607efe46b94cea9"
+                "reference": "3f03b625710f24071e2937e88112e9a19099c9eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/473fb4544afff836f4d9877c4607efe46b94cea9",
-                "reference": "473fb4544afff836f4d9877c4607efe46b94cea9",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/3f03b625710f24071e2937e88112e9a19099c9eb",
+                "reference": "3f03b625710f24071e2937e88112e9a19099c9eb",
                 "shasum": ""
             },
             "require": {
@@ -4111,7 +4220,7 @@
             "type": "symfony-bridge",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.1-dev"
+                    "dev-master": "4.2-dev"
                 },
                 "thanks": {
                     "name": "phpunit/phpunit",
@@ -4145,7 +4254,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2018-11-24T07:45:31+00:00"
+            "time": "2018-11-26T10:55:26+00:00"
         },
         {
             "name": "symfony/polyfill-php72",
