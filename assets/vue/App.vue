@@ -1,13 +1,9 @@
 <template>
     <div class="board">
         <p v-if="!websocketConnected">KEINE VERBINDUNG! // TODO: fancy</p>
-        <tile
-            v-for="monitoring in monitorings"
-            :key="monitoring.id"
-            :monitoring-data="monitoring"
-            :now="now"
-            :style="cssProps"
-        />
+        <treemap
+            ref="treemap"
+            :treeData="monitoringsAsTree" />
         <p v-if="Object.keys(monitorings).length === 0">LEER! // TODO: fancy</p>
     </div>
 </template>
@@ -16,15 +12,15 @@
 import Vue from "vue";
 import { mapState } from "vuex";
 import { Client, WebSocketTransport } from "thruway.js";
-import Tile from "./Tile";
+import Treemap from "./Treemap";
 
-let cached = {};
-let dirty = true;
+let cached = [];
+let dirty = false;
 
 export default {
     name: "App",
     components: {
-        "tile": Tile
+        "treemap": Treemap
     },
     props: [
         "url",
@@ -33,7 +29,7 @@ export default {
     data() {
         return {
             now: "",
-            monitorings: {}
+            monitorings: []
         };
     },
     computed: {
@@ -43,6 +39,17 @@ export default {
                 "--grid-columns": grid.width,
                 "--grid-rows": grid.height
             }
+        },
+        monitoringsAsTree() {
+            return {
+                "name": "root",
+                "children": this.monitorings.map(function(value) {
+                    return {
+                        "name": value.id,
+                        "value": value.priority
+                    }
+                })
+            };
         },
         ...mapState(["websocketConnected"])
     },
@@ -72,7 +79,12 @@ export default {
         });
         wamp.topic("phashtopic").subscribe((v) => {
             let data = JSON.parse(v.args[0]);
-            cached[data.id] = data;
+            let index = cached.findIndex(v => v.id === data.id);
+            if (index !== -1) {
+                cached[index] = data;
+            } else {
+                cached.push(data);
+            }
             dirty = true;
         });
     },
@@ -80,9 +92,9 @@ export default {
         updateNow() {
             this.now = new Date().getTime();
             if (dirty) {
-                Vue.set(this, "monitorings", cached);
-                this.$forceUpdate();
+                this.monitorings = cached.slice(0);
                 dirty = false;
+                Vue.nextTick(() => this.$refs.treemap.updateThisThing());
             }
         }
     }
@@ -93,10 +105,6 @@ export default {
     .board {
         height: 100%;
         width: 100%;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: stretch;
-        align-content: stretch;
-        overflow: visible;
+        overflow: hidden;
     }
 </style>

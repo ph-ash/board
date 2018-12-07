@@ -54,6 +54,7 @@ class NewData extends ContainerAwareCommand
                         'status' => $input->getArgument('status'),
                         'payload' => 'payload',
                         'idleTimeout' => '100',
+                        'priority' => random_int(1, 50),
                         'date' => (new DateTimeImmutable('now', new DateTimeZone('UTC')))->format(DateTimeImmutable::ATOM)
                     ];
 
