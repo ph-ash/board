@@ -71,7 +71,10 @@ export default {
     mounted() {
         const ws = new WebSocketTransport(this.url, undefined, true),
             wamp = new Client(ws, this.realm);
-        ws.onOpen.subscribe(() => this.$store.dispatch("webSocketConnected"));
+        ws.onOpen.subscribe(() => {
+            this.$store.dispatch("webSocketConnected");
+            wamp.publish('phashtopic', 'boardAvailable');
+        });
         ws.onClose.subscribe(() => {
             if (this.$store.state.websocketConnected) {
                 this.$store.dispatch("webSocketDisconnected");
