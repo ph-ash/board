@@ -20,3 +20,7 @@ TBD
 ## Issues
 
 TBD
+
+## Thanks
+
+The visualization relies on the great [albertopereira/vuejs-treemap](https://github.com/albertopereira/vuejs-treemap) Vue component.
