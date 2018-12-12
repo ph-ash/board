@@ -1,0 +1,8 @@
+.git*
+.idea
+documentation/
+node_modules/
+public/build/
+tests/
+var/cache/*
+var/log/*

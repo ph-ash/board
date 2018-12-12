@@ -1,22 +1,22 @@
-FROM php:7.2-fpm-alpine
-RUN apk add autoconf \
-      zlib \
-      zlib-dev \
-      supervisor \
-      yarn \
-   && docker-php-ext-install zip \
-   && docker-php-ext-enable zip \
-   && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
-
+FROM composer:1 as composer
 COPY . /var/www/html
-RUN cd /var/www/html \
-    && composer install \
-    && php bin/console cache:warmup \
-    && yarn install \
-    && yarn build
+WORKDIR /var/www/html
+ENV APP_ENV prod
+RUN composer install --no-dev --no-scripts \
+    && composer run auto-scripts \
+    && php bin/console cache:warmup
 
-RUN mkdir -p /var/log/supervisord
+FROM node:11 as yarn
+COPY --from=composer /var/www/html /app
+WORKDIR /app
+RUN yarn install \
+    && yarn run build \
+    && rm -fr node_modules
 
-COPY ./Docker/supervisord.conf /etc/supervisord.conf
+FROM php:7.2-fpm-alpine
+COPY --from=yarn /app /var/www/html
+WORKDIR /var/www/html
+ENV APP_ENV prod
+RUN apk add supervisor
 
-ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]
+ENTRYPOINT ["supervisord", "--configuration", "/var/www/html/docker/supervisord.conf"]
