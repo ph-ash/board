@@ -2,7 +2,7 @@ FROM composer:1 as composer
 COPY . /var/www/html
 WORKDIR /var/www/html
 ENV APP_ENV prod
-RUN composer install --no-dev --no-scripts \
+RUN composer install --no-dev --no-scripts --optimize-autoloader \
     && composer run auto-scripts \
     && php bin/console cache:warmup
 
