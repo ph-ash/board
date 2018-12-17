@@ -1,7 +1,6 @@
 <template>
     <div class="board">
         <div v-if="showOverlay">{{ overlayStatus }} // TODO: fancy</div>
-        <p v-if="monitorings.length === 0">LEER! // TODO: fancy </p>
         <treemap
                 ref="treemap"
                 :treeData="monitoringsAsTree"
