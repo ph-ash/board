@@ -1,5 +1,12 @@
 <template>
     <div class="treemap">
+        <tile
+                v-for="monitoring in treeData.children"
+                :key="monitoring.name"
+                :monitoring-data="monitoring"
+                :now="now"
+                :ref="monitoring.name"
+        />
         <svg :height="height" style="margin-left: 0;" :width="width">
             <g style="shape-rendering: crispEdges;" transform="translate(0,20)">
                 <transition-group name="list" tag="g" class="depth">
@@ -32,32 +39,32 @@
                                 :y="y(children.y0)"
                                 :width="x(children.x1 - children.x0 + children.parent.x0)"
                                 :height="y(children.y1 - children.y0 + children.parent.y0)"
-                                :style="{ fill: color[children.data.status] }"
+                                :style="{ fill: color[getColorFor(children.id)] }"
                         >
-                            <title>{{ children.data.name }} | {{ children.data.threshhold.toISOString(true) }}</title>
+                            <title>{{ children.data.name }} | idle since {{ children.data.threshhold.toISOString(true) }} | {{ children.data.payload }}</title>
                         </rect>
 
-            <!-- The visible square text element with the title and value of the child node -->
-            <text
-              dy="1em"
-              :key="'t_' + children.id"
-              :x="x(children.x0) + 6"
-              :y="y(children.y0) + 6"
-              style="fill-opacity: 1;"
-              >
-              {{ children.data.name }}
-            </text>
+                        <!-- The visible square text element with the title and value of the child node -->
+                        <!--<text-->
+                                <!--dy="1em"-->
+                                <!--:key="'t_' + children.id"-->
+                                <!--:x="x(children.x0) + 6"-->
+                                <!--:y="y(children.y0) + 6"-->
+                                <!--style="fill-opacity: 1;"-->
+                        <!--&gt;-->
+                            <!--{{ children.data.name }}-->
+                        <!--</text>-->
 
-            <!--<text-->
-              <!--dy="2.25em"-->
-              <!--:key="'v_' + children.id"-->
-              <!--:x="x(children.x0) + 6"-->
-              <!--:y="y(children.y0) + 6"-->
-              <!--style="fill-opacity: 1;"-->
-              <!--&gt;-->
+                        <!--<text-->
+                        <!--dy="2.25em"-->
+                        <!--:key="'v_' + children.id"-->
+                        <!--:x="x(children.x0) + 6"-->
+                        <!--:y="y(children.y0) + 6"-->
+                        <!--style="fill-opacity: 1;"-->
+                        <!--&gt;-->
 
-              <!--{{ children.value }}-->
-            <!--</text>-->
+                        <!--{{ children.value }}-->
+                        <!--</text>-->
 
                     </g>
                 </transition-group>
@@ -89,6 +96,7 @@
     import {scaleLinear} from "d3-scale"
     import {json} from "d3-request"
     import {hierarchy, treemap} from "d3-hierarchy"
+    import Tile from "./Tile"
 
     // To be explicit about which methods are from D3 let's wrap them around an object
     // Is there a better way to do this?
@@ -101,8 +109,12 @@
 
     export default {
         name: "Treemap",
+        components: {
+            "tile": Tile
+        },
         props: [
-            "treeData"
+            "treeData",
+            "now"
         ],
         data() {
             return {
@@ -206,7 +218,6 @@
                         .sort(function (a, b) {
                             return b.height - a.height || b.value - a.value
                         });
-                    console.log(that.rootNode);
                     that.rootNode.x = that.rootNode.y = 0;
                     that.rootNode.x1 = that.width;
                     that.rootNode.y1 = that.height;
@@ -245,6 +256,9 @@
             // and the template reflects the changes
             selectNode(event) {
                 this.selected = event.target.id
+            },
+            getColorFor(monitoringId) {
+                return this.$refs[monitoringId.replace(this.treeData.name + ".", "")][0].currentStatus;
             }
         }
     }

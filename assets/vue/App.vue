@@ -1,10 +1,11 @@
 <template>
     <div class="board">
         <p v-if="!websocketConnected">KEINE VERBINDUNG! // TODO: fancy</p>
+        <p v-if="monitorings.length === 0">LEER! // TODO: fancy</p>
         <treemap
                 ref="treemap"
-                :treeData="monitoringsAsTree"/>
-        <p v-if="Object.keys(monitorings).length === 0">LEER! // TODO: fancy</p>
+                :treeData="monitoringsAsTree"
+                :now="now"/>
     </div>
 </template>
 
@@ -35,16 +36,16 @@
         },
         computed: {
             monitoringsAsTree() {
-                let that = this
                 return {
-                    "name": "root",
+                    "name": "Monitoring",
+                    "now": this.now,
                     "children": this.monitorings.map(function (item) {
                         return {
                             "name": item.id,
                             "value": item.priority,
                             "status": item.status,
-                            "idle": that.isIdle(item),
-                            "threshhold": item.threshhold
+                            "threshhold": item.threshhold,
+                            "payload": item.payload
                         }
                     })
                 };
@@ -72,13 +73,18 @@
 
             ws.onOpen.subscribe(() => {
                 this.$store.dispatch("webSocketConnected");
-                wamp.publish("phashtopic", "boardAvailable");
+                wamp.publish("phashcontrol", "boardAvailable");
+                console.log("sent available");
             });
 
             ws.onClose.subscribe(() => {
                 if (this.$store.state.websocketConnected) {
                     this.$store.dispatch("webSocketDisconnected");
                 }
+            });
+
+            wamp.topic("phashcontrol").subscribe((v) => {
+                console.log("received initial data")
             });
 
             wamp.topic("phashtopic").subscribe((v) => {
@@ -92,18 +98,17 @@
                 } else {
                     cached.push(data);
                 }
+                console.log("dirty");
                 dirty = true;
             });
         },
         methods: {
-            isIdle(monitoringData) {
-                return monitoringData.threshhold < this.now;
-            },
             updateNow() {
                 this.now = new Date().getTime();
                 if (dirty) {
                     this.monitorings = cached.slice(0);
                     Vue.nextTick(() => this.$refs.treemap.recalculateAndRender());
+                    console.log("clean");
                     dirty = false;
                 }
             }
