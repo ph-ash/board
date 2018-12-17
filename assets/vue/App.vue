@@ -1,7 +1,7 @@
 <template>
     <div class="board">
-        <p v-if="!websocketConnected">KEINE VERBINDUNG! // TODO: fancy</p>
-        <p v-if="monitorings.length === 0">LEER! // TODO: fancy</p>
+        <div v-if="showOverlay">{{ overlayStatus }} // TODO: fancy</div>
+        <p v-if="monitorings.length === 0">LEER! // TODO: fancy </p>
         <treemap
                 ref="treemap"
                 :treeData="monitoringsAsTree"
@@ -11,13 +11,13 @@
 
 <script>
     import Vue from "vue"
-    import {mapState} from "vuex"
+    import {mapState, mapGetters} from "vuex"
     import {Client, WebSocketTransport} from "thruway.js"
     import moment from "moment"
     import Treemap from "./Treemap"
 
-    let cached = [];
-    let dirty = false;
+    let cached = [],
+        dirty = false;
 
     export default {
         name: "App",
@@ -50,7 +50,8 @@
                     })
                 };
             },
-            ...mapState(["websocketConnected"])
+            ...mapState(["websocketConnected", "firstRender"]),
+            ...mapGetters(["overlayStatus", "showOverlay"])
         },
         created() {
             this.updateNow();
@@ -74,17 +75,16 @@
             ws.onOpen.subscribe(() => {
                 this.$store.dispatch("webSocketConnected");
                 wamp.publish("phashcontrol", "boardAvailable");
-                console.log("sent available");
             });
 
             ws.onClose.subscribe(() => {
                 if (this.$store.state.websocketConnected) {
-                    this.$store.dispatch("webSocketDisconnected");
+                    this.$store.dispatch("webSocketDisconnected")
                 }
             });
 
-            wamp.topic("phashcontrol").subscribe((v) => {
-                console.log("received initial data")
+            wamp.topic("phashcontrol").subscribe(() => {
+                this.$store.dispatch("boardInitialized")
             });
 
             wamp.topic("phashtopic").subscribe((v) => {
@@ -98,7 +98,6 @@
                 } else {
                     cached.push(data);
                 }
-                console.log("dirty");
                 dirty = true;
             });
         },
@@ -108,8 +107,10 @@
                 if (dirty) {
                     this.monitorings = cached.slice(0);
                     Vue.nextTick(() => this.$refs.treemap.recalculateAndRender());
-                    console.log("clean");
                     dirty = false;
+                    if (this.$store.state.firstRender) {
+                        this.$store.dispatch("firstRenderCompleted")
+                    }
                 }
             }
         }
