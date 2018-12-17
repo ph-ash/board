@@ -13,6 +13,7 @@
         "symfony/expression-language": "*",
         "symfony/flex": "^1.1",
         "symfony/framework-bundle": "*",
+        "symfony/maker-bundle": "^1.10",
         "symfony/monolog-bundle": "^3.3",
         "symfony/twig-bundle": "*",
         "symfony/webpack-encore-bundle": "^1.0",
