@@ -1,19 +1,23 @@
 security:
     encoders:
-        App\Security\User:
+        Symfony\Component\Security\Core\User\User:
             algorithm: argon2i
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        # used to reload user from session & other features (e.g. switch_user)
-        app_user_provider:
-            id: App\Security\UserProvider
+        in_memory:
+            memory:
+                users:
+                    phash-board:  { password: '%env(USER_PASSWORD)%', roles: [ 'ROLE_USER' ] }
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             anonymous: true
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
 
             # activate different ways to authenticate
 
