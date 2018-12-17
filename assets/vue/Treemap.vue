@@ -11,6 +11,19 @@
             <g style="shape-rendering: crispEdges;" transform="translate(0,20)">
                 <transition-group name="list" tag="g" class="depth">
                     <g
+                            v-if="selectedNode == undefined || selectedNode._children == undefined || selectedNode._children.length === 0"
+                            key="no-data">
+                        <text
+                                dy=".65em"
+                                x="50%"
+                                y="50%"
+                                font-size="large"
+                                font-style="oblique"
+                                text-anchor="middle">
+                            No data to display
+                        </text>
+                    </g>
+                    <g
                             class="children"
                             v-for="children in selectedNode._children"
                             :key="'c_' + children.id"
@@ -41,18 +54,19 @@
                                 :height="y(children.y1 - children.y0 + children.parent.y0)"
                                 :style="{ fill: color[getColorFor(children.id)] }"
                         >
-                            <title>{{ children.data.name }} | idle since {{ children.data.threshhold.toISOString(true) }} | {{ children.data.payload }}</title>
+                            <title>{{ children.data.name }} | idle since {{ children.data.threshhold.toISOString(true) }} | {{
+                                children.data.payload }}</title>
                         </rect>
 
                         <!-- The visible square text element with the title and value of the child node -->
                         <!--<text-->
-                                <!--dy="1em"-->
-                                <!--:key="'t_' + children.id"-->
-                                <!--:x="x(children.x0) + 6"-->
-                                <!--:y="y(children.y0) + 6"-->
-                                <!--style="fill-opacity: 1;"-->
+                        <!--dy="1em"-->
+                        <!--:key="'t_' + children.id"-->
+                        <!--:x="x(children.x0) + 6"-->
+                        <!--:y="y(children.y0) + 6"-->
+                        <!--style="fill-opacity: 1;"-->
                         <!--&gt;-->
-                            <!--{{ children.data.name }}-->
+                        <!--{{ children.data.name }}-->
                         <!--</text>-->
 
                         <!--<text-->
