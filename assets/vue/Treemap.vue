@@ -207,10 +207,8 @@
             },
             // Called once, to create the hierarchical data representation
             initialize() {
-                let that = this;
-
-                if (that.treeData) {
-                    that.rootNode = d3.hierarchy(that.treeData)
+                if (this.treeData) {
+                    this.rootNode = d3.hierarchy(this.treeData)
                         .eachBefore(function (d) {
                             d.id = (d.parent ? d.parent.id + "." : "") + d.data.name
                         })
@@ -218,10 +216,10 @@
                         .sort(function (a, b) {
                             return b.height - a.height || b.value - a.value
                         });
-                    that.rootNode.x = that.rootNode.y = 0;
-                    that.rootNode.x1 = that.width;
-                    that.rootNode.y1 = that.height;
-                    that.rootNode.depth = 0
+                    this.rootNode.x = this.rootNode.y = 0;
+                    this.rootNode.x1 = this.width;
+                    this.rootNode.y1 = this.height;
+                    this.rootNode.depth = 0
                 }
             },
             // Calculates the accumulated value (sum of children values) of a node - its weight,
