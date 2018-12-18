@@ -98,6 +98,7 @@
                 session.subscribe("phashcontrol", (args) => {
                     let data = JSON.parse(args[0]);
                     if (data === "all data sent") {
+                        console.log(data);
                         this.$store.dispatch("boardInitialized")
                     }
                 });
@@ -132,9 +133,9 @@
                     this.monitorings = cached.slice(0);
                     Vue.nextTick(() => this.$refs.treemap.recalculateAndRender());
                     dirty = false;
-                    if (this.$store.state.firstRender) {
-                        this.$store.dispatch("firstRenderCompleted")
-                    }
+                }
+                if (!this.$store.state.initializingBoard && this.$store.state.firstRender) {
+                    this.$store.dispatch("firstRenderCompleted")
                 }
             }
         }
