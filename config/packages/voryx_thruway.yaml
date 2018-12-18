@@ -2,7 +2,22 @@ voryx_thruway:
   realm: '%websocket.realm%'
   url: '%websocket.url%' #The url that the clients will use to connect to the router
   trusted_url: '%websocket.internal-url%'
+  user_provider: our_fancy_provider
   router:
     ip: '127.0.0.1'  # the ip that the router should start on
     port: '%websocket.port%'  # public facing port.  If authentication is enabled, this port will be protected
     trusted_port: '%websocket.internal-port%' # Bypasses all authentication.  Use this for trusted clients.
+    authentication: true
+
+services:
+  wamp_cra_auth:
+    class: Thruway\Authentication\WampCraAuthProvider
+    parent: voryx.thruway.wamp.cra.auth.client
+    tags:
+      - { name: thruway.internal_client }
+
+  our_fancy_provider:
+    class: App\Security\InMemoryProvider
+    arguments:
+      - '%env(USER_PASSWORD)%'
+    public: true
