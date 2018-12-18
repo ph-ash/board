@@ -4,6 +4,7 @@ import App from "../vue/App";
 import store from "../js/store";
 
 require("../css/app.css");
+require("../css/bootstrap.min.css");
 
 new Vue({
     components: { App },

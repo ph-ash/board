@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Phash{% endblock %}
+
+{% block body %}
+    <div id="app" data-url="{{ websocket.url }}" data-realm="{{ websocket.realm }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}

@@ -18,6 +18,6 @@ class Index extends AbstractController
      */
     public function index(): Response
     {
-        return $this->render('base.html.twig');
+        return $this->render('board.html.twig');
     }
 }
