@@ -18,7 +18,7 @@
 <script>
     import Vue from "vue"
     import {mapState, mapGetters} from "vuex"
-    import {Client, WebSocketTransport} from "thruway.js"
+    import autobahn from "autobahn"
     import moment from "moment"
     import Treemap from "./Treemap"
 
@@ -32,7 +32,8 @@
         },
         props: [
             "url",
-            "realm"
+            "realm",
+            "password"
         ],
         data() {
             return {
@@ -75,40 +76,54 @@
             })();
         },
         mounted() {
-            const ws = new WebSocketTransport(this.url, undefined, true),
-                wamp = new Client(ws, this.realm);
+            const conn = new autobahn.Connection({
+                    url: this.url,
+                    realm: this.realm,
+                    authmethods: ["wampcra"],
+                    authid: "phash-board",
+                    onchallenge: (session, method, extra) => {
+                        if (method === "wampcra") {
+                            console.log("authenticating via '" + method + "' and challenge '" + extra.challenge + "'");
+                            return autobahn.auth_cra.sign(this.password, extra.challenge);
+                        } else {
+                            throw "don't know how to authenticate using '" + method + "'";
+                        }
+                    }
+                });
 
-            ws.onOpen.subscribe(() => {
+            conn.onopen = (session, details) => {
                 this.$store.dispatch("webSocketConnected");
-                wamp.publish("phashcontrol", "boardAvailable");
-            });
+                session.publish("phashcontrol", ["boardAvailable"]);
 
-            ws.onClose.subscribe(() => {
+                session.subscribe("phashcontrol", (args) => {
+                    let data = JSON.parse(args[0]);
+                    if (data === "all data sent") {
+                        this.$store.dispatch("boardInitialized")
+                    }
+                });
+
+                session.subscribe("phashtopic", (args) => {
+                    let data = JSON.parse(args[0]),
+                        index = cached.findIndex(v => v.id === data.id);
+
+                    data["threshhold"] = moment(data.date).add(data.idleTimeoutInSeconds, "s");
+
+                    if (index !== -1) {
+                        cached[index] = data;
+                    } else {
+                        cached.push(data);
+                    }
+                    dirty = true;
+                })
+            };
+
+            conn.onclose = (session, details) => {
                 if (this.$store.state.websocketConnected) {
                     this.$store.dispatch("webSocketDisconnected")
                 }
-            });
+            };
 
-            wamp.topic("phashcontrol").subscribe((v) => {
-                let data = JSON.parse(v.args[0]);
-                if (data === "all data sent") {
-                    this.$store.dispatch("boardInitialized")
-                }
-            });
-
-            wamp.topic("phashtopic").subscribe((v) => {
-                let data = JSON.parse(v.args[0]),
-                    index = cached.findIndex(v => v.id === data.id);
-
-                data["threshhold"] = moment(data.date).add(data.idleTimeoutInSeconds, "s");
-
-                if (index !== -1) {
-                    cached[index] = data;
-                } else {
-                    cached.push(data);
-                }
-                dirty = true;
-            });
+            conn.open();
         },
         methods: {
             updateNow() {

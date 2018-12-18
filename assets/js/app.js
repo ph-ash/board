@@ -11,13 +11,15 @@ new Vue({
     data() {
         return {
             url: "",
-            realm: ""
+            realm: "",
+            password: ""
         };
     },
     beforeMount() {
         this.url = this.$el.dataset.url;
         this.realm = this.$el.dataset.realm;
+        this.password = this.$el.dataset.password;
     },
-    template: '<App :url="url" :realm="realm"/>',
+    template: '<App :url="url" :realm="realm" :password="password"/>',
     store
 }).$mount("#app");
