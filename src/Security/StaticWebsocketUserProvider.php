@@ -6,7 +6,7 @@ namespace App\Security;
 
 use Symfony\Component\Security\Core\User\InMemoryUserProvider;
 
-class InMemoryProvider extends InMemoryUserProvider
+class StaticWebsocketUserProvider extends InMemoryUserProvider
 {
     public function __construct(string $userPassword)
     {

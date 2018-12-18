@@ -6,4 +6,4 @@ twig:
         websocket:
             realm: '%websocket.realm%'
             url: '%websocket.url%'
-            password: '%env(USER_PASSWORD)%'
+            password: '%env(WEBSOCKET_PASSWORD)%'

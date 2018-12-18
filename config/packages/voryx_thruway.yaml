@@ -2,7 +2,7 @@ voryx_thruway:
   realm: '%websocket.realm%'
   url: '%websocket.url%' #The url that the clients will use to connect to the router
   trusted_url: '%websocket.internal-url%'
-  user_provider: our_fancy_provider
+  user_provider: static_websocket_user_provider
   router:
     ip: '127.0.0.1'  # the ip that the router should start on
     port: '%websocket.port%'  # public facing port.  If authentication is enabled, this port will be protected
@@ -16,8 +16,8 @@ services:
     tags:
       - { name: thruway.internal_client }
 
-  our_fancy_provider:
-    class: App\Security\InMemoryProvider
+  static_websocket_user_provider:
+    class: App\Security\StaticWebsocketUserProvider
     arguments:
-      - '%env(USER_PASSWORD)%'
+      - '%env(WEBSOCKET_PASSWORD)%'
     public: true
