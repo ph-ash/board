@@ -1,6 +1,13 @@
 <template>
     <div class="board">
-        <div v-if="showOverlay">{{ overlayStatus }} // TODO: fancy</div>
+        <div
+                v-if="showOverlay"
+                class="overlay">
+            <div>
+                <img src="../images/spinner.gif" alt="loading spinner"/>
+                <p>{{ overlayStatus }}</p>
+            </div>
+        </div>
         <treemap
                 ref="treemap"
                 :treeData="monitoringsAsTree"
@@ -82,8 +89,11 @@
                 }
             });
 
-            wamp.topic("phashcontrol").subscribe(() => {
-                this.$store.dispatch("boardInitialized")
+            wamp.topic("phashcontrol").subscribe((v) => {
+                let data = JSON.parse(v.args[0]);
+                if (data === "all data sent") {
+                    this.$store.dispatch("boardInitialized")
+                }
             });
 
             wamp.topic("phashtopic").subscribe((v) => {
@@ -121,5 +131,27 @@
         height: 100%;
         width: 100%;
         overflow: hidden;
+    }
+
+    .overlay {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.8);
+        display: table;
+    }
+
+    .overlay div {
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .overlay p {
+        margin: 20px;
+        background-color: white;
     }
 </style>
