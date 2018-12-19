@@ -6,14 +6,14 @@
 parameters:
     env(WEBSOCKET_REALM): ''
     env(WEBSOCKET_PASSWORD): ''
-    env(SERVICE_NAME): ''
+    env(PUBLIC_HOSTNAME): ''
     env(USER_PASSWORD): ''
 
     websocket.port: 8080
     websocket.internal-port: 8081
-    websocket.host: '%env(SERVICE_NAME)%'
+    websocket.host: '%env(PUBLIC_HOSTNAME)%'
     websocket.url: 'ws://%websocket.host%:%websocket.port%'
-    websocket.internal-url: 'ws://%env(SERVICE_NAME)%:%websocket.internal-port%'
+    websocket.internal-url: 'ws://%env(PUBLIC_HOSTNAME)%:%websocket.internal-port%'
     websocket.realm: '%env(WEBSOCKET_REALM)%'
     websocket.password: '%env(WEBSOCKET_PASSWORD)%'
 

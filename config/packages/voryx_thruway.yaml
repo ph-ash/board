@@ -4,7 +4,7 @@ voryx_thruway:
   trusted_url: '%websocket.internal-url%'
   user_provider: static_websocket_user_provider
   router:
-    ip: '127.0.0.1'  # the ip that the router should start on
+    ip: 0.0.0.0  # the ip that the router should start on
     port: '%websocket.port%'  # public facing port.  If authentication is enabled, this port will be protected
     trusted_port: '%websocket.internal-port%' # Bypasses all authentication.  Use this for trusted clients.
     authentication: true
