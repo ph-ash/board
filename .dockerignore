@@ -1,5 +1,8 @@
+.env*
 .git*
 .idea
+.web-server-pid
+Dockerfile
 documentation/
 node_modules/
 public/build/

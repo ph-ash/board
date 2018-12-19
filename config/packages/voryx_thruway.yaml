@@ -19,5 +19,5 @@ services:
   static_websocket_user_provider:
     class: App\Security\StaticWebsocketUserProvider
     arguments:
-      - '%env(WEBSOCKET_PASSWORD)%'
+      - '%websocket.password%'
     public: true

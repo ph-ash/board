@@ -4,12 +4,18 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    websocket.port: '8080'
-    websocket.internal-port: '8081'
-    websocket.host: '127.0.0.1'
+    env(WEBSOCKET_REALM): ''
+    env(WEBSOCKET_PASSWORD): ''
+    env(SERVICE_NAME): ''
+    env(USER_PASSWORD): ''
+
+    websocket.port: 8080
+    websocket.internal-port: 8081
+    websocket.host: '%env(SERVICE_NAME)%'
     websocket.url: 'ws://%websocket.host%:%websocket.port%'
-    websocket.internal-url: 'ws://127.0.0.1:%websocket.internal-port%'
-    websocket.realm: 'realm1'
+    websocket.internal-url: 'ws://%env(SERVICE_NAME)%:%websocket.internal-port%'
+    websocket.realm: '%env(WEBSOCKET_REALM)%'
+    websocket.password: '%env(WEBSOCKET_PASSWORD)%'
 
 services:
     # default configuration for services in *this* file
