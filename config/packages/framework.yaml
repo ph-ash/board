@@ -8,6 +8,9 @@ framework:
     # Remove or comment this section to explicitly disable session support.
     session:
         handler_id: ~
+        #do not log users out
+        cookie_lifetime: 0
+        gc_maxlifetime: 0
 
     #esi: true
     #fragments: true
