@@ -8,7 +8,7 @@ security:
         in_memory:
             memory:
                 users:
-                    phash-board:  { password: '%env(USER_PASSWORD)%', roles: [ 'ROLE_USER' ] }
+                    phash-board:  { password: '%env(BOARD_LOGIN_PASSWORD)%', roles: [ 'ROLE_USER' ] }
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
