@@ -24,7 +24,7 @@ ENV APP_ENV=prod \
     PUBLIC_HOSTNAME=localhost \
     WAMP_REALM=realm1 \
     WAMP_PASSWORD=pleaseChooseASecretPasswordForTheWebsocket \
-    BOARD_LOGIN_PASSWORD='$argon2i$v=19$m=1024,t=2,p=2$TUVUYWk3SVpMekVTOWJaaQ$/X8MSzzLEHJHfBllXjbw25sBA5pj7xHDhojjHwoqOmQ'
+    BOARD_LOGIN_PASSWORD='phash-board'
 
 RUN apk add supervisor \
     && php bin/console cache:warmup
