@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use LogicException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,7 +15,7 @@ class Index extends AbstractController
     /**
      * @Route("/")
      * @IsGranted("ROLE_USER")
-     * @throws \LogicException
+     * @throws LogicException
      */
     public function index(): Response
     {
