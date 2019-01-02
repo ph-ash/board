@@ -7,7 +7,7 @@
         ],
         computed: {
             isIdle() {
-                return this.now > this.monitoringData.threshhold
+                return this.now > this.monitoringData.threshold
             },
             currentStatus() {
                 if (this.monitoringData.status === "error") {
