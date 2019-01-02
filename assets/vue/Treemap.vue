@@ -54,7 +54,7 @@
                                 :height="y(children.y1 - children.y0 + children.parent.y0)"
                                 :style="{ fill: color[getColorFor(children.id)] }"
                         >
-                            <title>{{ children.data.name }} | idle since {{ children.data.threshhold.toISOString(true) }} | {{
+                            <title>{{ children.data.name }} | {{
                                 children.data.payload }}</title>
                         </rect>
 

@@ -43,17 +43,13 @@
         },
         computed: {
             monitoringsAsTree() {
+                let that = this;
                 return {
                     "name": "Monitoring",
                     "now": this.now,
                     "children": this.monitorings.map(function (item) {
-                        return {
-                            "name": item.id,
-                            "value": item.priority,
-                            "status": item.status,
-                            "threshhold": item.threshhold,
-                            "payload": item.payload
-                        }
+                        return that.getSubtree(item);
+
                     })
                 };
             },
@@ -77,19 +73,19 @@
         },
         mounted() {
             const conn = new autobahn.Connection({
-                    url: this.url,
-                    realm: this.realm,
-                    authmethods: ["wampcra"],
-                    authid: "phash-board",
-                    onchallenge: (session, method, extra) => {
-                        if (method === "wampcra") {
-                            console.log("authenticating via '" + method + "' and challenge '" + extra.challenge + "'");
-                            return autobahn.auth_cra.sign(this.password, extra.challenge);
-                        } else {
-                            throw "don't know how to authenticate using '" + method + "'";
-                        }
+                url: this.url,
+                realm: this.realm,
+                authmethods: ["wampcra"],
+                authid: "phash-board",
+                onchallenge: (session, method, extra) => {
+                    if (method === "wampcra") {
+                        console.log("authenticating via '" + method + "' and challenge '" + extra.challenge + "'");
+                        return autobahn.auth_cra.sign(this.password, extra.challenge);
+                    } else {
+                        throw "don't know how to authenticate using '" + method + "'";
                     }
-                });
+                }
+            });
 
             conn.onopen = (session, details) => {
                 this.$store.dispatch("webSocketConnected");
@@ -106,9 +102,7 @@
                 session.subscribe("phashtopic", (args) => {
                     let data = JSON.parse(args[0]),
                         index = cached.findIndex(v => v.id === data.id);
-
-                    data["threshhold"] = moment(data.date).add(data.idleTimeoutInSeconds, "s");
-
+                    data["threshold"] = moment(data.date).add(data.idleTimeoutInSeconds, "s");
                     if (index !== -1) {
                         cached[index] = data;
                     } else {
@@ -137,7 +131,33 @@
                 if (!this.$store.state.initializingBoard && this.$store.state.firstRender) {
                     this.$store.dispatch("firstRenderCompleted")
                 }
-            }
+            },
+            getSubtree(origItem) {
+                let item = JSON.parse(JSON.stringify(origItem));
+                let path = item.path.split(".");
+                if (path.length === 1) {
+                    return {
+                        "name": item.id,
+                        "value": item.priority,
+                        "status": item.status,
+                        "threshold": item.threshold,
+                        "payload": item.payload
+                    }
+                } else {
+                    let currentPath = path[0];
+                    path.splice(0, 1);
+                    item.path = path.join('.');
+                    return {
+                        "name": currentPath,
+                        "status": item.status,
+                        "threshold": item.threshold,
+                        "payload": item.payload,
+                        "children": [
+                            this.getSubtree(item)
+                        ]
+                    }
+                }
+            },
         }
     };
 </script>
