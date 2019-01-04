@@ -43,15 +43,13 @@
         },
         computed: {
             monitoringsAsTree() {
-                let that = this;
-                return {
+                let root = {
                     "name": "Monitoring",
                     "now": this.now,
-                    "children": this.monitorings.map(function (item) {
-                        return that.getSubtree(item);
-
-                    })
+                    "children": []
                 };
+                this.buildTree(root, this.monitorings);
+                return root;
             },
             ...mapState(["websocketConnected", "firstRender"]),
             ...mapGetters(["overlayStatus", "showOverlay"])
@@ -132,32 +130,37 @@
                     this.$store.dispatch("firstRenderCompleted")
                 }
             },
-            getSubtree(origItem) {
-                let item = JSON.parse(JSON.stringify(origItem));
-                let path = item.path.split(".");
-                if (path.length === 1) {
-                    return {
-                        "name": item.id,
-                        "value": item.priority,
-                        "status": item.status,
-                        "threshold": item.threshold,
-                        "payload": item.payload
-                    }
-                } else {
-                    let currentPath = path[0];
-                    path.splice(0, 1);
-                    item.path = path.join('.');
-                    return {
-                        "name": currentPath,
-                        "status": item.status,
-                        "threshold": item.threshold,
-                        "payload": item.payload,
-                        "children": [
-                            this.getSubtree(item)
-                        ]
-                    }
-                }
+
+            buildTree(rootNode, monitoringList) {
+                let that = this;
+
+                monitoringList.forEach(function (monitoringItem) {
+                    let item = JSON.parse(JSON.stringify(monitoringItem)),
+                        path = item.path.split(".");
+                    that.createChildNode(rootNode, monitoringItem, path);
+                });
             },
+            createChildNode(parentNode, monitoring, remainingPath) {
+                if (remainingPath.length === 0) {
+                    parentNode.children.push({
+                        "name": monitoring.id,
+                        "value": monitoring.priority,
+                        "status": monitoring.status,
+                        "threshold": monitoring.threshold,
+                        "payload": monitoring.payload
+                    })
+                } else {
+                    let currentNode = parentNode.children.find(x => x.name === remainingPath[0]);
+                    if (currentNode === undefined) {
+                        currentNode = {
+                            "name": remainingPath[0],
+                            "children": []
+                        };
+                        parentNode.children.push(currentNode)
+                    }
+                    this.createChildNode(currentNode, monitoring, remainingPath.splice(1))
+                }
+            }
         }
     };
 </script>
