@@ -1,12 +1,5 @@
 <template>
     <div class="treemap">
-        <tile
-                v-for="monitoring in treeData.children"
-                :key="monitoring.name"
-                :monitoring-data="monitoring"
-                :now="now"
-                :ref="monitoring.name"
-        />
         <svg :height="height" style="margin-left: 0;" :width="width">
             <g style="shape-rendering: crispEdges;" transform="translate(0,20)">
                 <transition-group name="list" tag="g" class="depth">
@@ -52,9 +45,9 @@
                                 :y="y(children.y0)"
                                 :width="x(children.x1 - children.x0 + children.parent.x0)"
                                 :height="y(children.y1 - children.y0 + children.parent.y0)"
-                                :style="{ fill: color[getColorFor(children.id)] }"
+                                :style="{ fill: color[children.data.status] }"
                         >
-                            <title>{{ children.data.name }} | idle since {{ children.data.threshhold.toISOString(true) }} | {{
+                            <title>{{children.data.status}} | {{ children.data.name }} | {{
                                 children.data.payload }}</title>
                         </rect>
 
@@ -110,7 +103,6 @@
     import {scaleLinear} from "d3-scale"
     import {json} from "d3-request"
     import {hierarchy, treemap} from "d3-hierarchy"
-    import Tile from "./Tile"
 
     // To be explicit about which methods are from D3 let's wrap them around an object
     // Is there a better way to do this?
@@ -123,9 +115,6 @@
 
     export default {
         name: "Treemap",
-        components: {
-            "tile": Tile
-        },
         props: [
             "treeData",
             "now"
@@ -217,6 +206,7 @@
             recalculateAndRender() {
                 this.initialize();
                 this.accumulate(this.rootNode, this);
+                this.accumulateStatus(this.rootNode, this);
                 this.treemap(this.rootNode)
             },
             // Called once, to create the hierarchical data representation
@@ -238,17 +228,45 @@
             },
             // Calculates the accumulated value (sum of children values) of a node - its weight,
             // represented afterwards in the area of its square
-            accumulate(d, context) {
-                d._children = d.children;
+            accumulate(node, context) {
+                node._children = node.children;
 
-                if (d._children) {
-                    d.value = d._children.reduce(function (p, v) {
-                        return p + context.accumulate(v, context)
+                if (node._children) {
+                    node.value = node._children.reduce(function (carry, currentNode) {
+                        return carry + context.accumulate(currentNode, context)
                     }, 0);
-                    return d.value
+                    return node.value
                 } else {
-                    return d.value
+                    return node.value
                 }
+            },
+            accumulateStatus(node, context) {
+                node._children = node.children;
+                if (node._children) {
+                    node.data.status = node._children.reduce(function (carry, currentNode) {
+                        if (carry === "error") return "error";
+
+                        let currentStatus = context.accumulateStatus(currentNode, context);
+                        if (currentStatus === "error") {
+                            return "error";
+                        } else if (carry === "idle" || currentStatus === "idle") {
+                            return "idle";
+                        }
+                        return currentStatus;
+                    }, "none");
+                }
+
+                return this.getNodeStatus(node.data, context)
+            },
+            getNodeStatus(data, context) {
+                if (data.status === "error") {
+                    return "error";
+                }
+
+                if (context.now > data.threshold) {
+                    data.status = "idle";
+                }
+                return data.status
             },
             // Helper method - gets a node by its id attribute
             getNodeById(node, id, context) {
@@ -268,9 +286,6 @@
             // and the template reflects the changes
             selectNode(event) {
                 this.selected = event.target.id
-            },
-            getColorFor(monitoringId) {
-                return this.$refs[monitoringId.replace(this.treeData.name + ".", "")][0].currentStatus;
             }
         }
     }

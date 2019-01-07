@@ -43,19 +43,13 @@
         },
         computed: {
             monitoringsAsTree() {
-                return {
+                let root = {
                     "name": "Monitoring",
                     "now": this.now,
-                    "children": this.monitorings.map(function (item) {
-                        return {
-                            "name": item.id,
-                            "value": item.priority,
-                            "status": item.status,
-                            "threshhold": item.threshhold,
-                            "payload": item.payload
-                        }
-                    })
+                    "children": []
                 };
+                this.buildTree(root, this.monitorings);
+                return root;
             },
             ...mapState(["websocketConnected", "firstRender"]),
             ...mapGetters(["overlayStatus", "showOverlay"])
@@ -77,19 +71,19 @@
         },
         mounted() {
             const conn = new autobahn.Connection({
-                    url: this.url,
-                    realm: this.realm,
-                    authmethods: ["wampcra"],
-                    authid: "phash-board",
-                    onchallenge: (session, method, extra) => {
-                        if (method === "wampcra") {
-                            console.log("authenticating via '" + method + "' and challenge '" + extra.challenge + "'");
-                            return autobahn.auth_cra.sign(this.password, extra.challenge);
-                        } else {
-                            throw "don't know how to authenticate using '" + method + "'";
-                        }
+                url: this.url,
+                realm: this.realm,
+                authmethods: ["wampcra"],
+                authid: "phash-board",
+                onchallenge: (session, method, extra) => {
+                    if (method === "wampcra") {
+                        console.log("authenticating via '" + method + "' and challenge '" + extra.challenge + "'");
+                        return autobahn.auth_cra.sign(this.password, extra.challenge);
+                    } else {
+                        throw "don't know how to authenticate using '" + method + "'";
                     }
-                });
+                }
+            });
 
             conn.onopen = (session, details) => {
                 this.$store.dispatch("webSocketConnected");
@@ -106,9 +100,7 @@
                 session.subscribe("phashtopic", (args) => {
                     let data = JSON.parse(args[0]),
                         index = cached.findIndex(v => v.id === data.id);
-
-                    data["threshhold"] = moment(data.date).add(data.idleTimeoutInSeconds, "s");
-
+                    data["threshold"] = moment(data.date).add(data.idleTimeoutInSeconds, "s");
                     if (index !== -1) {
                         cached[index] = data;
                     } else {
@@ -136,6 +128,37 @@
                 }
                 if (!this.$store.state.initializingBoard && this.$store.state.firstRender) {
                     this.$store.dispatch("firstRenderCompleted")
+                }
+            },
+
+            buildTree(rootNode, monitoringList) {
+                let that = this;
+
+                monitoringList.forEach(function (monitoringItem) {
+                    let item = JSON.parse(JSON.stringify(monitoringItem)),
+                        path = item.path.split(".");
+                    that.createChildNode(rootNode, monitoringItem, path);
+                });
+            },
+            createChildNode(parentNode, monitoring, remainingPath) {
+                if (remainingPath.length === 0) {
+                    parentNode.children.push({
+                        "name": monitoring.id,
+                        "value": monitoring.priority,
+                        "status": monitoring.status,
+                        "threshold": monitoring.threshold,
+                        "payload": monitoring.payload
+                    })
+                } else {
+                    let currentNode = parentNode.children.find(x => x.name === remainingPath[0]);
+                    if (currentNode === undefined) {
+                        currentNode = {
+                            "name": remainingPath[0],
+                            "children": []
+                        };
+                        parentNode.children.push(currentNode)
+                    }
+                    this.createChildNode(currentNode, monitoring, remainingPath.splice(1))
                 }
             }
         }
