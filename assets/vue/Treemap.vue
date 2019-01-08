@@ -244,10 +244,9 @@
                 node._children = node.children;
                 if (node._children) {
                     node.data.status = node._children.reduce(function (carry, currentNode) {
-                        if (carry === "error") return "error";
 
                         let currentStatus = context.accumulateStatus(currentNode, context);
-                        if (currentStatus === "error") {
+                        if (currentStatus === "error" || carry === "error") {
                             return "error";
                         } else if (carry === "idle" || currentStatus === "idle") {
                             return "idle";
