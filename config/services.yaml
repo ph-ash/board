@@ -6,14 +6,15 @@
 parameters:
     env(WAMP_REALM): ''
     env(WAMP_PASSWORD): ''
-    env(PUBLIC_HOSTNAME): ''
+    env(WAMP_INTERNAL_HOSTNAME): ''
+    env(PUBLIC_WEBSOCKET_URL): ''
     env(BOARD_LOGIN_PASSWORD): ''
 
-    websocket.port: 8080
+    websocket.listening-port: 8080
     websocket.internal-port: 8081
-    websocket.host: '%env(PUBLIC_HOSTNAME)%'
-    websocket.url: 'ws://%websocket.host%:%websocket.port%'
-    websocket.internal-url: 'ws://%env(PUBLIC_HOSTNAME)%:%websocket.internal-port%'
+    websocket.url: '%env(PUBLIC_WEBSOCKET_URL)%'
+    websocket.listening-url: 'ws://%env(WAMP_INTERNAL_HOSTNAME)%:%websocket.listening-port%'
+    websocket.internal-url: 'ws://%env(WAMP_INTERNAL_HOSTNAME)%:%websocket.internal-port%'
     websocket.realm: '%env(WAMP_REALM)%'
     websocket.password: '%env(WAMP_PASSWORD)%'
 

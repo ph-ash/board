@@ -21,9 +21,11 @@ FROM php:7.2-fpm-alpine
 COPY --from=yarn /app /var/www/html
 WORKDIR /var/www/html
 ENV APP_ENV=prod \
-    PUBLIC_HOSTNAME=localhost \
+    APP_SECRET='73adb4285b84053d174db4b65ffa8ff4bfa24e1b' \
+    PUBLIC_WEBSOCKET_URL='ws://localhost:8080' \
     WAMP_REALM=realm1 \
     WAMP_PASSWORD=pleaseChooseASecretPasswordForTheWebsocket \
+    WAMP_INTERNAL_HOSTNAME=board \
     BOARD_LOGIN_PASSWORD='phash-board'
 
 RUN apk add supervisor \
