@@ -1,11 +1,11 @@
 voryx_thruway:
   realm: '%websocket.realm%'
-  url: '%websocket.url%' #The url that the clients will use to connect to the router
+  url: '%websocket.listening-url%' #The url that the clients will use to connect to the router
   trusted_url: '%websocket.internal-url%'
   user_provider: static_websocket_user_provider
   router:
     ip: 0.0.0.0  # the ip that the router should start on
-    port: '%websocket.port%'  # public facing port.  If authentication is enabled, this port will be protected
+    port: '%websocket.listening-port%'  # public facing port.  If authentication is enabled, this port will be protected
     trusted_port: '%websocket.internal-port%' # Bypasses all authentication.  Use this for trusted clients.
     authentication: true
 
