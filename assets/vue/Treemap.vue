@@ -100,6 +100,7 @@
 </template>
 
 <script>
+    import Vue from "vue"
     import {scaleLinear} from "d3-scale"
     import {json} from "d3-request"
     import {hierarchy, treemap} from "d3-hierarchy"
@@ -128,6 +129,7 @@
                     bottom: 0,
                     left: 0
                 },
+                isInitializing: true,
                 width: window.visualViewport.width,
                 height: window.visualViewport.height,
                 selected: null,
@@ -142,7 +144,21 @@
         // You can do whatever when the selected node changes
         watch: {
             selectedNode(newData, oldData) {
-                console.log("The selected node is: " + this.selected)
+                if (!this.isInitializing) {
+                    this.$router.push('/' + newData.id);
+                }
+
+            },
+            treeData() {
+                this.isInitializing = false;
+                let that = this;
+                Vue.nextTick(() => that.selected = that.$route.params.pathMatch.replace("/", ""));
+            },
+            '$route' (to, from) {
+                if (this.rootNode && this.rootNode._children) {
+                    let nd = this.getNodeById(this.rootNode, to.path.replace("/", ""), this);
+                    this.selected = nd.id;
+                }
             }
         },
         mounted() {
@@ -207,7 +223,7 @@
                 this.initialize();
                 this.accumulate(this.rootNode, this);
                 this.accumulateStatus(this.rootNode, this);
-                this.treemap(this.rootNode)
+                this.treemap(this.rootNode);
             },
             // Called once, to create the hierarchical data representation
             initialize() {
@@ -223,7 +239,7 @@
                     this.rootNode.x = this.rootNode.y = 0;
                     this.rootNode.x1 = this.width;
                     this.rootNode.y1 = this.height;
-                    this.rootNode.depth = 0
+                    this.rootNode.depth = 0;
                 }
             },
             // Calculates the accumulated value (sum of children values) of a node - its weight,
@@ -271,7 +287,7 @@
             getNodeById(node, id, context) {
                 if (node.id === id) {
                     return node
-                } else if (node._children) {
+                } else if (id.includes(node.id) && node.hasOwnProperty("_children") && node._children) {
                     for (let i = 0; i < node._children.length; i++) {
                         let nd = context.getNodeById(node._children[i], id, context);
                         if (nd) {

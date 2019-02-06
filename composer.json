@@ -13,9 +13,8 @@
         "symfony/expression-language": "*",
         "symfony/flex": "^1.1",
         "symfony/framework-bundle": "*",
-        "symfony/maker-bundle": "^1.10",
-        "symfony/monolog-bundle": "^3.3",
-        "symfony/security-bundle": "4.1.*",
+        "symfony/monolog-bundle": "*",
+        "symfony/security-bundle": "*",
         "symfony/twig-bundle": "*",
         "symfony/webpack-encore-bundle": "^1.0",
         "symfony/yaml": "*",
@@ -29,7 +28,8 @@
         "symfony/dotenv": "*",
         "symfony/profiler-pack": "^1.0",
         "symfony/test-pack": "^1.0",
-        "symfony/web-server-bundle": "*"
+        "symfony/web-server-bundle": "*",
+        "symfony/maker-bundle": "^1.10"
     },
     "config": {
         "preferred-install": {
@@ -75,7 +75,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": true,
-            "require": "4.1.*"
+            "require": "4.2.*"
         },
         "hooks": {
             "pre-commit": [

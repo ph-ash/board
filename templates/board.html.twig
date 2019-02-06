@@ -3,7 +3,9 @@
 {% block title %}Phash{% endblock %}
 
 {% block body %}
-    <div id="app" data-url="{{ websocket.url }}" data-realm="{{ websocket.realm }}" data-password="{{ websocket.password }}" />
+    <div id="app" data-url="{{ websocket.url }}" data-realm="{{ websocket.realm }}" data-password="{{ websocket.password }}">
+        <router-view></router-view>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
