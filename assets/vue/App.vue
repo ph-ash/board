@@ -97,7 +97,7 @@
                     }
                 });
 
-                session.subscribe("phashtopic", (args) => {
+                session.subscribe("phashtopic-push", (args) => {
                     let data = JSON.parse(args[0]),
                         index = cached.findIndex(v => v.id === data.id);
                     data["threshold"] = moment(data.date).add(data.idleTimeoutInSeconds, "s");
