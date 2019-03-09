@@ -136,7 +136,7 @@
 
                 monitoringList.forEach(function (monitoringItem) {
                     let item = JSON.parse(JSON.stringify(monitoringItem)),
-                        path = item.path.split(".");
+                        path = item.path == null ? [] : item.path.split(".");
                     that.createChildNode(rootNode, monitoringItem, path);
                 });
             },
