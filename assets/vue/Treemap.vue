@@ -90,7 +90,8 @@
                     <text
                             dy=".65em"
                             x="6"
-                            y="-14">
+                            y="-14"
+                            v-if="selectedNode">
                         {{ selectedNode.id }}
                     </text>
                 </g>
@@ -199,10 +200,10 @@
             selectedNode() {
                 let node = null;
 
-                if (this.selected) {
+                if (this.selected && this.treeData && this.treeData.children && this.treeData.children.length > 0) {
                     let nd = this.getNodeById(this.rootNode, this.selected, this);
 
-                    if (nd._children) {
+                    if (nd._children || nd === this.rootNode) {
                         node = nd
                     } else {
                         node = nd.parent
@@ -245,33 +246,39 @@
             // Calculates the accumulated value (sum of children values) of a node - its weight,
             // represented afterwards in the area of its square
             accumulate(node, context) {
-                node._children = node.children;
+                if (node) {
+                    node._children = node.children;
 
-                if (node._children) {
-                    node.value = node._children.reduce(function (carry, currentNode) {
-                        return carry + context.accumulate(currentNode, context)
-                    }, 0);
-                    return node.value
-                } else {
-                    return node.value
+                    if (node._children) {
+                        node.value = node._children.reduce(function (carry, currentNode) {
+                            return carry + context.accumulate(currentNode, context)
+                        }, 0);
+                        return node.value
+                    } else {
+                        return node.value
+                    }
                 }
+                return 0
             },
             accumulateStatus(node, context) {
-                node._children = node.children;
-                if (node._children) {
-                    node.data.status = node._children.reduce(function (carry, currentNode) {
+                if (node) {
+                    node._children = node.children;
+                    if (node._children) {
+                        node.data.status = node._children.reduce(function (carry, currentNode) {
 
-                        let currentStatus = context.accumulateStatus(currentNode, context);
-                        if (currentStatus === "error" || carry === "error") {
-                            return "error";
-                        } else if (carry === "idle" || currentStatus === "idle") {
-                            return "idle";
-                        }
-                        return currentStatus;
-                    }, "none");
+                            let currentStatus = context.accumulateStatus(currentNode, context);
+                            if (currentStatus === "error" || carry === "error") {
+                                return "error";
+                            } else if (carry === "idle" || currentStatus === "idle") {
+                                return "idle";
+                            }
+                            return currentStatus;
+                        }, "none");
+                    }
+
+                    return this.getNodeStatus(node.data, context)
                 }
-
-                return this.getNodeStatus(node.data, context)
+                return "none"
             },
             getNodeStatus(data, context) {
                 if (data.status === "error") {
@@ -285,16 +292,19 @@
             },
             // Helper method - gets a node by its id attribute
             getNodeById(node, id, context) {
-                if (node.id === id) {
-                    return node
-                } else if (id.includes(node.id) && node.hasOwnProperty("_children") && node._children) {
-                    for (let i = 0; i < node._children.length; i++) {
-                        let nd = context.getNodeById(node._children[i], id, context);
-                        if (nd) {
-                            return nd
+                if (node) {
+                    if (node.id === id) {
+                        return node
+                    } else if (id.includes(node.id) && node.hasOwnProperty("_children") && node._children) {
+                        for (let i = 0; i < node._children.length; i++) {
+                            let nd = context.getNodeById(node._children[i], id, context);
+                            if (nd) {
+                                return nd
+                            }
                         }
                     }
                 }
+                return this.rootNode
             },
             // When a user clicks a square, changes the selected data attribute
             // which fires the computed selectedNode, which in turn finds the Node by the id of the square clicked
