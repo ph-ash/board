@@ -1,4 +1,5 @@
-.env*
+.env.local
+.env.*.local
 .git*
 .idea
 .web-server-pid
@@ -6,6 +7,5 @@ Dockerfile
 documentation/
 node_modules/
 public/build/
-tests/
 var/cache/*
 var/log/*

@@ -22,7 +22,7 @@ COPY --from=yarn /app /var/www/html
 WORKDIR /var/www/html
 ENV APP_ENV=prod \
     APP_SECRET='73adb4285b84053d174db4b65ffa8ff4bfa24e1b' \
-    PUBLIC_WEBSOCKET_URL='ws://localhost:8080' \
+    PUBLIC_WEBSOCKET_URL='ws://localhost/websocket' \
     WAMP_REALM=realm1 \
     WAMP_PASSWORD=pleaseChooseASecretPasswordForTheWebsocket \
     WAMP_INTERNAL_HOSTNAME=board \
