@@ -87,7 +87,7 @@
 
             conn.onopen = (session, details) => {
                 this.$store.dispatch("webSocketConnected");
-                session.publish("phashcontrol", ["boardAvailable"]);
+                session.publish("phashcontrol", [JSON.stringify("boardAvailable")]);
 
                 session.subscribe("phashcontrol", (args) => {
                     let data = JSON.parse(args[0]);
