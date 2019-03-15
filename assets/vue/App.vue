@@ -110,7 +110,13 @@
                 })
             };
 
-            conn.onclose = (session, details) => {
+            conn.onclose = (reason, details) => {
+                if (reason === "unreachable" && this.$store.state.detailedMessage === "") {
+                    this.$store.dispatch("webSocketUnreachable", " (please check if you can reach '" + this.url + "')")
+                }
+                if (reason === "lost" && this.$store.state.detailedMessage === "") {
+                    this.$store.dispatch("webSocketUnreachable", " (lost connection to the server at '" + this.url + "')")
+                }
                 if (this.$store.state.websocketConnected) {
                     this.$store.dispatch("webSocketDisconnected")
                 }
