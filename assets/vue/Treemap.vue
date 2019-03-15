@@ -274,9 +274,11 @@
                         return node
                     } else if (id.includes(node.id) && this.isBranch(node)) {
                         for (let i = 0; i < node._children.length; i++) {
-                            let nd = context.getNodeById(node._children[i], id, context);
-                            if (nd) {
-                                return nd
+                            if (id.includes(node._children[i].id)) {
+                                let nd = context.getNodeById(node._children[i], id, context);
+                                if (nd) {
+                                    return nd
+                                }
                             }
                         }
                     }
@@ -296,6 +298,8 @@
                 this.selected = event.target.id;
 
                 let clickedNode = this.getNodeById(this.selectedNode, event.target.id, this);
+                console.log(event.target.id);
+                console.log(clickedNode);
                 if (this.isLeaf(clickedNode)) {
                     this.$modal.show("dialog", {
                         class: "phash-dialog",
