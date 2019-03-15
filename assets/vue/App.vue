@@ -11,7 +11,8 @@
         <treemap
                 ref="treemap"
                 :treeData="monitoringsAsTree"
-                :now="now"/>
+                :now="now"
+                v-on:delete="deleteMonitoring" />
     </div>
 </template>
 
@@ -38,7 +39,8 @@
         data() {
             return {
                 now: "",
-                monitorings: []
+                monitorings: [],
+                conn: null
             };
         },
         computed: {
@@ -70,7 +72,7 @@
             })();
         },
         mounted() {
-            const conn = new autobahn.Connection({
+            this.conn = new autobahn.Connection({
                 url: this.url,
                 realm: this.realm,
                 authmethods: ["wampcra"],
@@ -85,7 +87,7 @@
                 }
             });
 
-            conn.onopen = (session, details) => {
+            this.conn.onopen = (session, details) => {
                 this.$store.dispatch("webSocketConnected");
                 session.publish("phashcontrol", [JSON.stringify("boardAvailable")]);
 
@@ -107,10 +109,19 @@
                         cached.push(data);
                     }
                     dirty = true;
+                });
+
+                session.subscribe("phashtopic.delete", (args) => {
+                    let id = JSON.parse(args[0]),
+                        index = cached.findIndex(v => v.id === id);
+                    if (index !== -1) {
+                        cached.splice(index, 1);
+                    }
+                    dirty = true;
                 })
             };
 
-            conn.onclose = (reason, details) => {
+            this.conn.onclose = (reason, details) => {
                 if (reason === "unreachable" && this.$store.state.detailedMessage === "") {
                     this.$store.dispatch("webSocketUnreachable", " (please check if you can reach '" + this.url + "')")
                 }
@@ -122,7 +133,7 @@
                 }
             };
 
-            conn.open();
+            this.conn.open();
         },
         methods: {
             updateNow() {
@@ -166,6 +177,10 @@
                     }
                     this.createChildNode(currentNode, monitoring, remainingPath.splice(1))
                 }
+            },
+            deleteMonitoring(id) {
+                let args = [JSON.stringify("deleteMonitoring"), JSON.stringify(id)];
+                this.conn.session.publish("phashcontrol", args);
             }
         }
     };

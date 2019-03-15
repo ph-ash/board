@@ -271,10 +271,22 @@
             getNodeById(node, id, context) {
                 if (node) {
                     if (node.id === id) {
+                        // node found, return it
                         return node
                     } else if (id.includes(node.id) && this.isBranch(node)) {
+                        // matching branch found, descend into children
                         for (let i = 0; i < node._children.length; i++) {
-                            if (id.includes(node._children[i].id)) {
+                            // count path fragments of searched id and the i-th child id
+                            let searchedFragments = id.split('.'),
+                                foundFragments = node._children[i].id.split('.');
+                            if (searchedFragments.length === foundFragments.length) {
+                                // we are in the final matching branch, now be sure to return the correct child, even if they begin similarly (e.g. "a.b.c.Monitoring" and "a.b.c.Monitoring 2")
+                                if (node._children[i].id === id) {
+                                    // we found the node, return it
+                                    return node._children[i];
+                                }
+                            } else if (id.includes(node._children[i].id)) {
+                                // we are in a matching branch, but not in the lowest: recurse
                                 let nd = context.getNodeById(node._children[i], id, context);
                                 if (nd) {
                                     return nd
@@ -283,6 +295,7 @@
                         }
                     }
                 }
+                // we didn't find the node at all
                 return this.rootNode
             },
             isBranch(node) {
@@ -298,14 +311,26 @@
                 this.selected = event.target.id;
 
                 let clickedNode = this.getNodeById(this.selectedNode, event.target.id, this);
-                console.log(event.target.id);
-                console.log(clickedNode);
                 if (this.isLeaf(clickedNode)) {
+                    let monitoringName = event.target.id.split(".").slice(-1)[0];
                     this.$modal.show("dialog", {
                         class: "phash-dialog",
-                        title: event.target.id.split(".").slice(-1)[0],
+                        title: monitoringName,
                         text: clickedNode.data.payload,
                         buttons: [
+                            {
+                                title: "Delete",
+                                handler: () => {
+                                    if (confirm("Are you sure?")) {
+                                        this.$modal.hide("dialog");
+                                        this.$emit("delete", monitoringName);
+                                    }
+                                }
+                            },
+                            {
+                                title: "",
+                                handler: () => {}
+                            },
                             {
                                 title: "Close",
                                 default: true
