@@ -1,5 +1,6 @@
 <template>
     <div class="treemap">
+        <v-dialog width="600px" />
         <svg :height="height" style="margin-left: 0;" :width="width">
             <g style="shape-rendering: crispEdges;" transform="translate(0,20)">
                 <transition-group name="list" tag="g" class="depth">
@@ -47,32 +48,8 @@
                                 :height="y(children.y1 - children.y0 + children.parent.y0)"
                                 :style="{ fill: color[children.data.status] }"
                         >
-                            <title>{{children.data.status}} | {{ children.data.name }} | {{
-                                children.data.payload }}</title>
+                            <title>{{children.data.status}} | {{ children.data.name }}</title>
                         </rect>
-
-                        <!-- The visible square text element with the title and value of the child node -->
-                        <!--<text-->
-                        <!--dy="1em"-->
-                        <!--:key="'t_' + children.id"-->
-                        <!--:x="x(children.x0) + 6"-->
-                        <!--:y="y(children.y0) + 6"-->
-                        <!--style="fill-opacity: 1;"-->
-                        <!--&gt;-->
-                        <!--{{ children.data.name }}-->
-                        <!--</text>-->
-
-                        <!--<text-->
-                        <!--dy="2.25em"-->
-                        <!--:key="'v_' + children.id"-->
-                        <!--:x="x(children.x0) + 6"-->
-                        <!--:y="y(children.y0) + 6"-->
-                        <!--style="fill-opacity: 1;"-->
-                        <!--&gt;-->
-
-                        <!--{{ children.value }}-->
-                        <!--</text>-->
-
                     </g>
                 </transition-group>
 
@@ -295,7 +272,7 @@
                 if (node) {
                     if (node.id === id) {
                         return node
-                    } else if (id.includes(node.id) && node.hasOwnProperty("_children") && node._children) {
+                    } else if (id.includes(node.id) && this.isBranch(node)) {
                         for (let i = 0; i < node._children.length; i++) {
                             let nd = context.getNodeById(node._children[i], id, context);
                             if (nd) {
@@ -306,11 +283,32 @@
                 }
                 return this.rootNode
             },
+            isBranch(node) {
+                return node.hasOwnProperty("_children") && node._children
+            },
+            isLeaf(node) {
+                return !this.isBranch(node);
+            },
             // When a user clicks a square, changes the selected data attribute
             // which fires the computed selectedNode, which in turn finds the Node by the id of the square clicked
             // and the template reflects the changes
             selectNode(event) {
-                this.selected = event.target.id
+                this.selected = event.target.id;
+
+                let clickedNode = this.getNodeById(this.selectedNode, event.target.id, this);
+                if (this.isLeaf(clickedNode)) {
+                    this.$modal.show("dialog", {
+                        class: "phash-dialog",
+                        title: event.target.id.split(".").slice(-1)[0],
+                        text: clickedNode.data.payload,
+                        buttons: [
+                            {
+                                title: "Close",
+                                default: true
+                            }
+                        ]
+                    })
+                }
             }
         }
     }
