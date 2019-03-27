@@ -17,7 +17,7 @@ RUN yarn install \
 
 # next stage #
 
-FROM php:7.2-fpm-alpine
+FROM alpine:3.9
 COPY --from=yarn /app /var/www/html
 WORKDIR /var/www/html
 ENV APP_ENV=prod \
@@ -28,8 +28,17 @@ ENV APP_ENV=prod \
     WAMP_INTERNAL_HOSTNAME=board \
     BOARD_LOGIN_PASSWORD='phash-board'
 
-RUN apk add supervisor \
+RUN apk add --no-cache php7-fpm \
+       php7-cli \
+       php7-ctype \
+       php7-json \
+       php7-mbstring \
+       php7-openssl \
+       php7-session \
+       php7-tokenizer \
+       supervisor \
+    && cp docker/*-fpm.conf /etc/php7/php-fpm.d/ \
     && php bin/console cache:warmup
 
-EXPOSE 8080 8081
+EXPOSE 8080 8081 9000
 ENTRYPOINT ["supervisord", "--configuration", "/var/www/html/docker/supervisord.conf"]
