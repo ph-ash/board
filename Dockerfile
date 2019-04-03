@@ -18,6 +18,7 @@ RUN yarn install \
 # next stage #
 
 FROM alpine:3.9
+ARG CURRENT_VERSION=dev
 COPY --from=yarn /app /var/www/html
 WORKDIR /var/www/html
 ENV APP_ENV=prod \
@@ -38,7 +39,8 @@ RUN apk add --no-cache php7-fpm \
        php7-tokenizer \
        supervisor \
     && cp docker/*-fpm.conf /etc/php7/php-fpm.d/ \
-    && php bin/console cache:warmup
+    && php bin/console cache:warmup \
+    && echo "successfully built $CURRENT_VERSION"
 
 EXPOSE 8080 8081 9000
 ENTRYPOINT ["supervisord", "--configuration", "/var/www/html/docker/supervisord.conf"]
