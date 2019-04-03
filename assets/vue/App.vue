@@ -24,6 +24,7 @@
     import Treemap from "./Treemap"
 
     let cached = [],
+        idled = [],
         dirty = false;
 
     export default {
@@ -108,6 +109,9 @@
                     } else {
                         cached.push(data);
                     }
+                    idled = idled.filter(function(value){
+                        return value !== data.id;
+                    });
                     dirty = true;
                 });
 
@@ -165,7 +169,12 @@
                         "status": monitoring.status,
                         "threshold": monitoring.threshold,
                         "payload": monitoring.payload
-                    })
+                    });
+
+                    if (this.now > monitoring.threshold && idled.find(function(value){return value === monitoring.id}) === undefined) {
+                        idled.push(monitoring.id);
+                        dirty = true;
+                    }
                 } else {
                     let currentNode = parentNode.children.find(x => x.name === remainingPath[0]);
                     if (currentNode === undefined) {
