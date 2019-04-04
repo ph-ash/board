@@ -12,6 +12,7 @@
                 ref="treemap"
                 :treeData="monitoringsAsTree"
                 :now="now"
+                :version="version"
                 v-on:delete="deleteMonitoring" />
     </div>
 </template>
@@ -35,7 +36,8 @@
         props: [
             "url",
             "realm",
-            "password"
+            "password",
+            "version"
         ],
         data() {
             return {

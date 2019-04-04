@@ -7,3 +7,4 @@ twig:
             realm: '%websocket.realm%'
             url: '%websocket.url%'
             password: '%websocket.password%'
+        version: '%version%'
