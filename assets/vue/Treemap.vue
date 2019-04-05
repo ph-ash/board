@@ -1,6 +1,7 @@
 <template>
     <div class="treemap">
         <v-dialog width="600px" />
+        <div class="versionInfo"><a :href="versionLink" target="_blank">{{ version }}</a></div>
         <svg :height="height" style="margin-left: 0;" :width="width">
             <g style="shape-rendering: crispEdges;" transform="translate(0,20)">
                 <transition-group name="list" tag="g" class="depth">
@@ -96,7 +97,8 @@
         name: "Treemap",
         props: [
             "treeData",
-            "now"
+            "now",
+            "version"
         ],
         data() {
             return {
@@ -194,6 +196,9 @@
                 this.y.domain([node.y0, node.y0 + (node.y1 - node.y0)]);
 
                 return node
+            },
+            versionLink() {
+                return 'https://github.com/ph-ash/documentation/tree/' + this.version;
             }
         },
         methods: {
@@ -400,5 +405,15 @@
     .list-enter, .list-leave-to /* .list-leave-active for <2.1.8 */
     {
         opacity: 0;
+    }
+
+    .versionInfo {
+        position: absolute;
+        right: 5px;
+        font-size: small;
+    }
+
+    .versionInfo a {
+        font-weight: bold;
     }
 </style>

@@ -5,6 +5,7 @@
 .web-server-pid
 Dockerfile
 documentation/
+hooks/
 node_modules/
 public/build/
 var/cache/*
