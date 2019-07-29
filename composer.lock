@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fb555f49bb36e0e902b51fd4fad2704f",
+    "content-hash": "abf50db44fad7cba782b06e421351e76",
     "packages": [
         {
             "name": "cboden/ratchet",
@@ -3931,13 +3931,13 @@
             "authors": [
                 {
                     "name": "Matt Bonneau",
-                    "role": "Developer",
-                    "email": "matt@bonneau.net"
+                    "email": "matt@bonneau.net",
+                    "role": "Developer"
                 },
                 {
                     "name": "David Dan",
-                    "role": "Developer",
-                    "email": "davidwdan@gmail.com"
+                    "email": "davidwdan@gmail.com",
+                    "role": "Developer"
                 }
             ],
             "description": "Thruway WAMP client",
@@ -4032,13 +4032,13 @@
             "authors": [
                 {
                     "name": "Matt Bonneau",
-                    "role": "Developer",
-                    "email": "matt@bonneau.net"
+                    "email": "matt@bonneau.net",
+                    "role": "Developer"
                 },
                 {
                     "name": "David Dan",
-                    "role": "Developer",
-                    "email": "davidwdan@gmail.com"
+                    "email": "davidwdan@gmail.com",
+                    "role": "Developer"
                 }
             ],
             "description": "Ratchet Transport for Thruway",
@@ -4165,13 +4165,13 @@
             "authors": [
                 {
                     "name": "Matt Bonneau",
-                    "role": "Developer",
-                    "email": "matt@bonneau.net"
+                    "email": "matt@bonneau.net",
+                    "role": "Developer"
                 },
                 {
                     "name": "David Dan",
-                    "role": "Developer",
-                    "email": "davidwdan@gmail.com"
+                    "email": "davidwdan@gmail.com",
+                    "role": "Developer"
                 }
             ],
             "description": "Thruway WAMP router core",
@@ -4188,16 +4188,16 @@
         },
         {
             "name": "voryx/thruway-bundle",
-            "version": "0.4.1",
+            "version": "0.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/voryx/ThruwayBundle.git",
-                "reference": "6a4c710581fddf9cb50162e81e066c90cdae1647"
+                "reference": "d5b5fc0406222d1a527c7bf4850a270a7bab7d1d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/voryx/ThruwayBundle/zipball/6a4c710581fddf9cb50162e81e066c90cdae1647",
-                "reference": "6a4c710581fddf9cb50162e81e066c90cdae1647",
+                "url": "https://api.github.com/repos/voryx/ThruwayBundle/zipball/d5b5fc0406222d1a527c7bf4850a270a7bab7d1d",
+                "reference": "d5b5fc0406222d1a527c7bf4850a270a7bab7d1d",
                 "shasum": ""
             },
             "require": {
@@ -4246,7 +4246,7 @@
                 "sockets",
                 "symfony"
             ],
-            "time": "2018-11-26T18:29:43+00:00"
+            "time": "2019-07-04T15:04:29+00:00"
         },
         {
             "name": "voryx/thruway-common",
@@ -5703,9 +5703,8 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "stability-flags": {
-        "voryx/thruway-bundle": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": true,

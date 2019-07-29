@@ -1,7 +1,6 @@
 {
     "type": "project",
     "license": "proprietary",
-    "minimum-stability": "dev",
     "prefer-stable" : true,
     "require": {
         "php": "^7.2",
@@ -18,7 +17,7 @@
         "symfony/twig-bundle": "*",
         "symfony/webpack-encore-bundle": "^1.0",
         "symfony/yaml": "*",
-        "voryx/thruway-bundle": "@dev"
+        "voryx/thruway-bundle": "^0.4"
     },
     "require-dev": {
         "brainmaestro/composer-git-hooks": "^2.6",
