@@ -1104,15 +1104,14 @@ atob@^2.1.1:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-autobahn@^18.10.2:
-  version "18.10.2"
-  resolved "https://registry.yarnpkg.com/autobahn/-/autobahn-18.10.2.tgz#60b79bf7bd0a5e97c2b8701c52058ea76d6ce86e"
-  integrity sha512-IjQZqzGvwBDQct/sGjPO1TZ5OONSOLP/+e3P97kMzvO17bomf1fIzge0DbdO+dxvmUSP2B/IZVFaGXD+n+xA6A==
+autobahn@^19.7.3:
+  version "19.7.3"
+  resolved "https://registry.yarnpkg.com/autobahn/-/autobahn-19.7.3.tgz#9d40a657f17b8527278eaf69019d3d15ec70b602"
+  integrity sha512-HZpQ/0ETjt7pNk8o1coVL2G7tdzSDQeeikynalsTnP5Iec/dSETyZzOrbDLKwykeAFGkXJmcmacIYAWuC/jrig==
   dependencies:
     cbor ">= 3.0.0"
     crypto-js ">=3.1.8"
     msgpack5 ">= 3.6.0"
-    randombytes ">=2.0.6"
     tweetnacl ">= 0.14.3"
     when ">= 3.7.7"
     ws ">= 1.1.4"
@@ -5416,7 +5415,7 @@ querystringify@^2.1.1:
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.1.1.tgz#60e5a5fd64a7f8bfa4d2ab2ed6fdf4c85bad154e"
   integrity sha512-w7fLxIRCRT7U8Qu53jQnJyPkYZIaR4n5151KMfcJlO/A9397Wxb1amJvROTK6TOnp7PfoAmg/qXiNHI+08jRfA==
 
-randombytes@>=2.0.6, randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5:
+randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/randombytes/-/randombytes-2.1.0.tgz#df6f84372f0270dc65cdf6291349ab7a473d4f2a"
   integrity sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==
