@@ -38,9 +38,6 @@
     "evenement/evenement": {
         "version": "v3.0.1"
     },
-    "facebook/webdriver": {
-        "version": "1.6.0"
-    },
     "guzzlehttp/psr7": {
         "version": "1.4.2"
     },
@@ -67,9 +64,6 @@
     },
     "psr/log": {
         "version": "1.0.2"
-    },
-    "psr/simple-cache": {
-        "version": "1.0.1"
     },
     "ralouphie/getallheaders": {
         "version": "2.0.5"
@@ -212,6 +206,9 @@
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
     },
+    "symfony/mime": {
+        "version": "v4.3.3"
+    },
     "symfony/monolog-bridge": {
         "version": "v4.1.9"
     },
@@ -224,9 +221,6 @@
             "ref": "18ebf5a940573a20de06f9c4060101eeb438cf3d"
         }
     },
-    "symfony/panther": {
-        "version": "v0.2.0"
-    },
     "symfony/phpunit-bridge": {
         "version": "4.1",
         "recipe": {
@@ -236,11 +230,17 @@
             "ref": "b4c7d939cac9a67e02366fa7971746e9cbf1dad0"
         }
     },
+    "symfony/polyfill-intl-idn": {
+        "version": "v1.11.0"
+    },
     "symfony/polyfill-mbstring": {
         "version": "v1.10.0"
     },
     "symfony/polyfill-php72": {
         "version": "v1.10.0"
+    },
+    "symfony/polyfill-php73": {
+        "version": "v1.11.0"
     },
     "symfony/process": {
         "version": "v4.1.7"
