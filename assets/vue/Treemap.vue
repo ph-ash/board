@@ -83,6 +83,7 @@
     import {scaleLinear} from "d3-scale"
     import {json} from "d3-request"
     import {hierarchy, treemap} from "d3-hierarchy"
+    import moment from "moment";
 
     // To be explicit about which methods are from D3 let's wrap them around an object
     // Is there a better way to do this?
@@ -321,7 +322,7 @@
                     this.$modal.show("dialog", {
                         class: "phash-dialog",
                         title: monitoringName,
-                        text: clickedNode.data.payload,
+                        text: this.formatModalText(clickedNode.data.payload, clickedNode.data.statusChangedAt, clickedNode.data.status),
                         buttons: [
                             {
                                 title: "Delete",
@@ -343,6 +344,14 @@
                         ]
                     })
                 }
+            },
+            formatModalText(payload, statusChangedAt, status) {
+                let now = moment(new Date());
+                let begin = moment(statusChangedAt);
+                let text = "<div>" + payload + "</div><div>Status " + status + " since: ";
+                text += moment(statusChangedAt).format("YYYY-MM-DD hh:mm");
+                text += " (" + moment.duration(now.diff(begin)).asHours().toFixed(2) + " hours)</div>" ;
+                return text;
             }
         }
     }
