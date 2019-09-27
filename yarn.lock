@@ -1093,10 +1093,10 @@ atob@^2.1.1:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-autobahn@^19.7.3:
-  version "19.7.3"
-  resolved "https://registry.yarnpkg.com/autobahn/-/autobahn-19.7.3.tgz#9d40a657f17b8527278eaf69019d3d15ec70b602"
-  integrity sha512-HZpQ/0ETjt7pNk8o1coVL2G7tdzSDQeeikynalsTnP5Iec/dSETyZzOrbDLKwykeAFGkXJmcmacIYAWuC/jrig==
+autobahn@^19.9.2:
+  version "19.9.2"
+  resolved "https://registry.yarnpkg.com/autobahn/-/autobahn-19.9.2.tgz#ab6a37e070553bcfea3617999450f9d88850c6d4"
+  integrity sha512-ZUKXNY3xhEIlvGiQx7ut2P9L3v1Z/aW+8bIGlKVODopSwxwSzKkzmTwNntVs7qehiRPmDiGbP0jycJLnap+AUw==
   dependencies:
     cbor ">= 3.0.0"
     crypto-js ">=3.1.8"
