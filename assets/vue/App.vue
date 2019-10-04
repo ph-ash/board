@@ -170,7 +170,8 @@
                         "value": monitoring.priority,
                         "status": monitoring.status,
                         "threshold": monitoring.threshold,
-                        "payload": monitoring.payload
+                        "payload": monitoring.payload,
+                        "statusChangedAt": monitoring.statusChangedAt
                     });
 
                     if (this.now > monitoring.threshold && idled.find(function(value){return value === monitoring.id}) === undefined) {
