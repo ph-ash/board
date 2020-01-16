@@ -1,6 +1,0 @@
-#!/usr/bin/env php
-<?php
-echo "Running tests.. ";
-exec('bin/phpunit --colors=never', $output, $returnCode);
-echo array_pop($output) . PHP_EOL;
-exit($returnCode);

@@ -1,9 +1,12 @@
 {
     "brainmaestro/composer-git-hooks": {
-        "version": "v2.6.0"
+        "version": "v2.8.3"
     },
     "cboden/ratchet": {
         "version": "v0.4.1"
+    },
+    "composer/xdebug-handler": {
+        "version": "1.4.0"
     },
     "doctrine/annotations": {
         "version": "1.0",
@@ -34,6 +37,9 @@
     },
     "pdepend/pdepend": {
         "version": "2.5.2"
+    },
+    "php": {
+        "version": "7.2"
     },
     "phpmd/phpmd": {
         "version": "2.6.0"
