@@ -8,7 +8,7 @@ RUN composer install --no-dev --no-scripts --optimize-autoloader \
 
 # next stage #
 
-FROM node:13.2.0 as yarn
+FROM node:13.6 as yarn
 COPY --from=composer /var/www/html /app
 WORKDIR /app
 RUN yarn install \
@@ -17,7 +17,7 @@ RUN yarn install \
 
 # next stage #
 
-FROM alpine:3.10.3
+FROM alpine:3.11
 ARG CURRENT_VERSION=master
 COPY --from=yarn /app /var/www/html
 WORKDIR /var/www/html

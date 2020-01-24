@@ -60,12 +60,10 @@
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "post-install-cmd": [
-            "@auto-scripts",
-            "vendor/bin/cghooks add --ignore-lock"
+            "@auto-scripts"
         ],
         "post-update-cmd": [
-            "@auto-scripts",
-            "vendor/bin/cghooks update"
+            "@auto-scripts"
         ]
     },
     "conflict": {
@@ -75,11 +73,6 @@
         "symfony": {
             "allow-contrib": true,
             "require": "4.3.*"
-        },
-        "hooks": {
-            "pre-commit": [
-                "hooks/pre-commit"
-            ]
         }
     }
 }
