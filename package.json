@@ -15,7 +15,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "autobahn": "^20.2.2",
+        "autobahn": "^20.9.2",
         "d3": "^6.1",
         "d3-request": "^1.0.6",
         "moment": "^2.22.2",
