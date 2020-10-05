@@ -8,7 +8,7 @@ RUN composer install --no-dev --no-scripts --optimize-autoloader \
 
 # next stage #
 
-FROM node:14.11.0 as yarn
+FROM node:14.12.0 as yarn
 COPY --from=composer /var/www/html /app
 WORKDIR /app
 RUN yarn install \
