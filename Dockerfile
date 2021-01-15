@@ -17,7 +17,7 @@ RUN yarn install \
 
 # next stage #
 
-FROM alpine:3.12.3
+FROM alpine:3.13.0
 ARG CURRENT_VERSION=master
 COPY --from=yarn /app /var/www/html
 WORKDIR /var/www/html
