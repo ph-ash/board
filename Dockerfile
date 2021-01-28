@@ -1,4 +1,4 @@
-FROM composer:1 as composer
+FROM composer:2 as composer
 COPY . /var/www/html
 WORKDIR /var/www/html
 ENV APP_ENV=prod
